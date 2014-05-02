@@ -24,8 +24,10 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.dict.Translator;
 import com.example.raven.objects.ContactObserverService;
 import com.example.raven.objects.Message;
+import com.example.raven.objects.Raven;
 import com.example.raven.objects.SmsReceiver;
 
 public class HistoryActivity extends Activity
@@ -151,8 +153,14 @@ public class HistoryActivity extends Activity
 	
 	public void onSendNew(View v)
 	{
-		Intent intent = new Intent(this, NewMessage.class);
-		startActivity(intent);
+		Translator t = new Raven().SetService(Raven.YANDEX);
+		String text = t.translate("en-he", "text");
+		
+		// Display SMS message
+		Toast.makeText(this, "RAVEN: " + text , Toast.LENGTH_SHORT).show();
+		
+//		Intent intent = new Intent(this, NewMessage.class);
+//		startActivity(intent);
 	}
 	
 	public void onUpdateClick(View v)

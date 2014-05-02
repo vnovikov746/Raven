@@ -3,7 +3,7 @@ package com.example.raven.objects;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
- 
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,18 +16,49 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import android.os.StrictMode;
+import android.os.AsyncTask;
+//import android.os.StrictMode;
  
 public class ServiceHandler {
- 
+
     static String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
- 
+
     public ServiceHandler() {
  
     }
+
+    private class ConnectionTask extends AsyncTask<Object, Void, String> {
+   	 
+        @Override
+        protected String doInBackground(Object... objs) {
+        	String url = (String) objs[0];
+        	Integer method = (Integer) objs[1];
+        	List<NameValuePair> params = (List<NameValuePair>) objs[2];
+
+        	return makeAsyncServiceCall(url, method, params);
+        }
  
+    }
+
+	public String makeServiceCall(String url, int method,
+            List<NameValuePair> params) {
+
+    	ConnectionTask task = new ConnectionTask();
+    	try {
+			return task.execute(url, method, params).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
     /**
      * Making service call
      * @url - url to make request
@@ -43,11 +74,11 @@ public class ServiceHandler {
      * @method - http request method
      * @params - http request params
      * */
-    public String makeServiceCall(String url, int method,
+    private String makeAsyncServiceCall(String url, int method,
             List<NameValuePair> params) {
     	
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy); 
+//		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//		StrictMode.setThreadPolicy(policy); 
     	
         try {
             // http client
@@ -89,6 +120,6 @@ public class ServiceHandler {
         }
          
         return response;
- 
     }
+
 }
