@@ -33,6 +33,13 @@ public class HistoryActivity extends Activity
 	public static RavenDAL dal;
 	public static ArrayList<Map<String, String>> mPeopleList;
 	
+	//menu
+	private int groupId = 1;
+	int NewMessageId = Menu.FIRST;
+	int GlobalSettingsId = Menu.FIRST +1;
+	int AboutId = Menu.FIRST +2;
+
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -129,12 +136,18 @@ public class HistoryActivity extends Activity
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.history, menu);
-		return true;
-	}
+    public boolean onCreateOptionsMenu(Menu menu) {
+		
+		Intent NewMessageIntent = new Intent(this, NewMessage.class);
+		menu.add(groupId, NewMessageId, NewMessageId, "New message").setIntent(NewMessageIntent);
+		
+		Intent GlobalSettingsIntent = new Intent(this, GlobalSettings.class);
+		menu.add(groupId, GlobalSettingsId, GlobalSettingsId, "Preferences").setIntent(GlobalSettingsIntent);
+		
+		menu.add(groupId, AboutId, AboutId, "About").setIntent(GlobalSettingsIntent);
+
+		return super.onCreateOptionsMenu(menu); 
+    }
 	
 	public void onSendNew(View v)
 	{
