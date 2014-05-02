@@ -154,7 +154,9 @@ public class HistoryActivity extends Activity
 	public void onSendNew(View v)
 	{
 		Translator t = new Raven().SetService(Raven.YANDEX);
-		String text = t.translate("en-he", "text");
+//		String text = t.translate("en-he", "text");
+//		Map<String, String> m = t.getLangs();
+		String text = t.detect("hello");
 		
 		// Display SMS message
 		Toast.makeText(this, "RAVEN: " + text , Toast.LENGTH_SHORT).show();

@@ -1,5 +1,9 @@
 package com.example.raven.dict;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,20 +22,12 @@ public class Yandex extends Translator {
 	
     // JSON Node names
     private static final String TAG_CODE = "code";
+    private static final String TAG_MESSAGE = "message";
     private static final String TAG_LANG = "lang";
     private static final String TAG_TEXT = "text";
-	
+    private static final String TAG_DIRS = "dirs";
+    private static final String TAG_LANGS = "langs";
 
-	@Override
-	public String translate(String lang, String text) {
-		String[] one_text = {text};
-		return translate(lang, one_text, "plain", "1", ServiceHandler.POST)[0];
-	}
-
-	@Override
-	public String[] translate(String lang, String[] text) {
-		return translate(lang, text, "plain", "1", ServiceHandler.POST);
-	}
 
 	/**
 	 * Translate
@@ -49,8 +45,7 @@ public class Yandex extends Translator {
 	 * ERR_UNPROCESSABLE_TEXT	422	The text could not be translated.
 	 * ERR_LANG_NOT_SUPPORTED	501	The specified translation direction is not supported.
 	 * */
-	public String[] translate(String lang, String[] text, String format, String options, int method) {
-		
+	private String[] translate(String lang, String[] text, String format, String options, int method) {
 		String[] translatedText = new String[text.length];
 		
 		//build the api call url
@@ -90,61 +85,151 @@ public class Yandex extends Translator {
 
 		return translatedText;
 	}
-	
-	
-	
-//	error:
-//	{"code":401,"message":"API key is invalid"}
-	
-	
-//	ERR_KEY_INVALID	401	Invalid API key.
-//	ERR_KEY_BLOCKED	402	This API key has been blocked.
-//	https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=APIkey&ui=en
-//	Langs getLangs(string key, string ui);
-//	{"dirs":["az-ru","be-bg","be-cs","be-de","be-en","be-es","be-fr","be-it","be-pl","be-ro","be-ru","be-sr","be-tr","bg-be","bg-ru","bg-uk","ca-en","ca-ru","cs-be","cs-en","cs-ru","cs-uk","da-en","da-ru","de-be","de-en","de-es","de-fr","de-it","de-ru","de-tr","de-uk","el-en","el-ru","en-be","en-ca","en-cs","en-da","en-de","en-el","en-es","en-et","en-fi","en-fr","en-hu","en-it","en-lt","en-lv","en-mk","en-nl","en-no","en-pt","en-ru","en-sk","en-sl","en-sq","en-sv","en-tr","en-uk","es-be","es-de","es-en","es-ru","es-uk","et-en","et-ru","fi-en","fi-ru","fr-be","fr-de","fr-en","fr-ru","fr-uk","hr-ru","hu-en","hu-ru","hy-ru","it-be","it-de","it-en","it-ru","it-uk","lt-en","lt-ru","lv-en","lv-ru","mk-en","mk-ru","nl-en","nl-ru","no-en","no-ru","pl-be","pl-ru","pl-uk","pt-en","pt-ru","ro-be","ro-ru","ro-uk","ru-az","ru-be","ru-bg","ru-ca","ru-cs","ru-da","ru-de","ru-el","ru-en","ru-es","ru-et","ru-fi","ru-fr","ru-hr","ru-hu","ru-hy","ru-it","ru-lt","ru-lv","ru-mk","ru-nl","ru-no","ru-pl","ru-pt","ru-ro","ru-sk","ru-sl","ru-sq","ru-sr","ru-sv","ru-tr","ru-uk","sk-en","sk-ru","sl-en","sl-ru","sq-en","sq-ru","sr-be","sr-ru","sr-uk","sv-en","sv-ru","tr-be","tr-de","tr-en","tr-ru","tr-uk","uk-bg","uk-cs","uk-de","uk-en","uk-es","uk-fr","uk-it","uk-pl","uk-ro","uk-ru","uk-sr","uk-tr"],"langs":{"ar":"Arabic","az":"Azerbaijani","be":"Belarusian","bg":"Bulgarian","bs":"Bosnian","ca":"Catalan","cs":"Czech","da":"Danish","de":"German","el":"Greek","en":"English","es":"Spanish","et":"Estonian","fi":"Finnish","fr":"French","he":"Hebrew","hr":"Croatian","hu":"Hungarian","hy":"Armenian","id":"Indonesian","is":"Icelandic","it":"Italian","ka":"Georgian","lt":"Lithuanian","lv":"Latvian","mk":"Macedonian","ms":"Malay","mt":"Maltese","nl":"Dutch","no":"Norwegian","pl":"Polish","pt":"Portuguese","ro":"Romanian","ru":"Russian","sk":"Slovak","sl":"Slovenian","sq":"Albanian","sr":"Serbian","sv":"Swedish","tr":"Turkish","uk":"Ukrainian","vi":"Vietnamese"}}
-	
-	
-	
-	
+
+
+	@Override
+	public String translate(String lang, String text) {
+		String[] one_text = {text};
+		return translate(lang, one_text, "plain", "1", ServiceHandler.POST)[0];
+	}
+
+	@Override
+	public String[] translate(String lang, String[] text) {
+		return translate(lang, text, "plain", "1", ServiceHandler.POST);
+	}
 	
 	
 	
 	
 	
-//	ERR_OK	200	Operation completed successfully.
-//	ERR_KEY_INVALID	401	Invalid API key.
-//	ERR_KEY_BLOCKED	402	This API key has been blocked.
-//	ERR_DAILY_REQ_LIMIT_EXCEEDED	403	You have reached the daily limit for requests (including calls of the translate method).
-//	ERR_DAILY_CHAR_LIMIT_EXCEEDED	404	You have reached the daily limit for the volume of translated text (including calls of the translate method).
-//	https://translate.yandex.net/api/v1.5/tr.json/detect?key=APIkey&text=Hello+world
-//	DetectedLang detect(string key, string text[], string format);
+	/**
+	 * Translate
+	 * @ui - 	en - in English
+	 * 			ru - in Russian
+	 * 			tr - in Turkish
+	 * 			uk - in Ukrainian
+	 * 
+	 * api: http://api.yandex.com/translate/doc/dg/reference/getLangs.xml
+	 * 
+	 * ERR_KEY_INVALID	401	Invalid API key.
+	 * ERR_KEY_BLOCKED	402	This API key has been blocked.
+	 * */
+	private Map<String, String> getLangs(String ui) {
+		Map<String, String> langs = new HashMap<String, String>();
+		
+		//build the api call url
+		String url = API_URL + "getLangs"
+				+ "?key=" + API_KEY
+				+ "&ui=" + ui;
+		
+		// Making a request to url and getting response
+		ServiceHandler sh = new ServiceHandler();
+		String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
+		Log.d("Response: ", "> " + jsonStr);
+
+        // Pares json response
+        if (jsonStr != null) {
+        	try {
+				JSONObject jsonObj = new JSONObject(jsonStr);
+				
+				//get code error
+				try {
+					int r_code = jsonObj.getInt(TAG_CODE);
+					return null;
+				} catch (JSONException e) {}
+
+				JSONArray r_dirs = jsonObj.getJSONArray(TAG_DIRS);
+				String[] dirs = new String[r_dirs.length()];
+				for (int i=0; i<r_dirs.length(); i++)
+					dirs[i] = r_dirs.getString(i);
+
+				JSONObject r_langs = jsonObj.getJSONObject(TAG_LANGS);
+				Iterator keys = r_langs.keys();
+				while (keys.hasNext()) {
+					String key = (String) keys.next();
+					String value = (String) r_langs.get(key);
+					langs.put(key, value);
+				}
+
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			Log.e("ServiceHandler", "Couldn't get any data from the url");
+		}
+
+		return langs;
+	}
+
+
+	@Override
+	public Map<String, String> getLangs() {
+		return getLangs("en");
+	}
 	
-//	Optional
-//	format	string	Text format.
-//	Possible values:
-//	plain - Text without markup (default value).
-//	html - Text in HTML format.
-	
-//	{"code":200,"lang":"en"}
 	
 	
 	
 	
 	
 	
+	/**
+	 * detect
+	 * @text - ....
+	 * 
+	 * api: http://api.yandex.com/translate/doc/dg/reference/detect.xml
+	 * 
+	 * ERR_OK	200	Operation completed successfully.
+	 * ERR_KEY_INVALID	401	Invalid API key.
+	 * ERR_KEY_BLOCKED	402	This API key has been blocked.
+	 * ERR_DAILY_REQ_LIMIT_EXCEEDED	403	You have reached the daily limit for requests (including calls of the detect method).
+	 * ERR_DAILY_CHAR_LIMIT_EXCEEDED	404	You have reached the daily limit for the volume of translated text (including calls of the detect method).
+	 * */
+	private String detect(String[] text, String format, int method) {
+		String r_lang = "";
+		
+		//build the api call url
+		String url = API_URL + "detect"
+				+ "?key=" + API_KEY
+				+ "&format=" + format;
+		for (String phrase : text)
+			url += "&text=" + phrase;
+		
+		// Making a request to url and getting response
+		ServiceHandler sh = new ServiceHandler();
+		String jsonStr = sh.makeServiceCall(url, method);
+		Log.d("Response: ", "> " + jsonStr);
+
+        // Pares json response
+        if (jsonStr != null) {
+        	try {
+				JSONObject jsonObj = new JSONObject(jsonStr);
+				int r_code = jsonObj.getInt(TAG_CODE);
+				if (r_code != 200) return null;
+				
+				r_lang = jsonObj.getString(TAG_LANG);
+			
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			Log.e("ServiceHandler", "Couldn't get any data from the url");
+			r_lang = "Error";
+		}
+
+		return r_lang;
+	}
+
+	@Override
+	public String detect(String text) {
+		String[] one_text = {text};
+		return detect(one_text, "plain", ServiceHandler.POST);
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	public String detect(String[] text) {
+		return detect(text, "plain", ServiceHandler.POST);
+	}
 	
 	
 	
