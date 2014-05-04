@@ -22,14 +22,25 @@ import com.example.raven.dict.Translator;
 public class SmsSender {
 	private Context mContext;
 	private RavenDAL dal = HistoryActivity.dal;
+	private AppPreferences _appPrefs;
 	
 	public SmsSender(Context context) {
 		mContext = context;
+		_appPrefs = new AppPreferences(context);
 	}
 	
-	public void send (String phoneNo, String original) {
+	public void send(String phoneNo, String original) {
+		if (_appPrefs.getBoolean(_appPrefs.TRANSLATE_OUT))
+			send(phoneNo, original, true);
+		else
+			send(phoneNo, original, true);
+	}
+	
+	public void send(String phoneNo, String original, boolean translate) {
+		String translated = "";
+		
 		if (!checkSimState()) return;
-		String translated = translate(original);
+		if (translate) translated = translate(original);
 		sendSMS(phoneNo, original, translated); // method to send message
 	}
 	

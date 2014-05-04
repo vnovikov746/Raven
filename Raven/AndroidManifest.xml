@@ -64,7 +64,7 @@
             android:label="@string/title_activity_global_settings" >
         </activity>
         <activity
-            android:name="com.example.raven.UserSettings"
+            android:name="com.example.raven.ChatSettings"
             android:label="@string/title_activity_user_settings" >
         </activity>
     </application>

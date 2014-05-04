@@ -6,7 +6,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class AppPreferences {
-    public static final String KEY_PREFS_SMS_BODY = "sms_body";
+	
+	//keys
+    public static final String FIRST_LAUNCH = "first_launch";
+    public static final String TRANSLATE_IN = "translate_in";
+    public static final String TRANSLATE_OUT = "translate_out";
+
     private static final String APP_SHARED_PREFS = AppPreferences.class.getSimpleName(); //  Name of the file -.xml //"com.example.app"
     private SharedPreferences _sharedPrefs;
     private Editor _prefsEditor;
@@ -16,14 +21,32 @@ public class AppPreferences {
         this._prefsEditor = _sharedPrefs.edit();
     }
 
-    public String getSmsBody() {
-//    	int selectionStart = prefs.getInt("selection-start", -1);
-        return _sharedPrefs.getString(KEY_PREFS_SMS_BODY, "");
+    //boolean
+    public boolean getBoolean(String key) {
+        return _sharedPrefs.getBoolean(key, false);
     }
-
-    public void saveSmsBody(String text) {
-//    	editor.putInt("selection-end", mSaved.getSelectionEnd());
-        _prefsEditor.putString(KEY_PREFS_SMS_BODY, text);
+    public void setBoolean(String key, boolean value) {
+        _prefsEditor.putBoolean(key, value);
         _prefsEditor.commit();
     }
+
+    //int
+    public int getInt(String key) {
+        return _sharedPrefs.getInt(key, 0);
+    }
+    public void setInt(String key, int value) {
+        _prefsEditor.putInt(key, value);
+        _prefsEditor.commit();
+    }
+
+    //String
+    public String getString(String key) {
+        return _sharedPrefs.getString(key, "");
+    }
+    public void setString(String key, String value) {
+        _prefsEditor.putString(key, value);
+        _prefsEditor.commit();
+    }
+
+    
 }

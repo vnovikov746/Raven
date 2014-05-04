@@ -4,6 +4,7 @@ import com.example.raven.objects.AppPreferences;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 
 public class GlobalSettings extends Activity
@@ -17,10 +18,10 @@ public class GlobalSettings extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_global_settings);
 		
-		
-		_appPrefs = new AppPreferences(getApplicationContext());
-		String someString = _appPrefs.getSmsBody();
-		_appPrefs.saveSmsBody(someString);
+		//init first settings
+		if (!_appPrefs.getBoolean(_appPrefs.FIRST_LAUNCH)) {
+			_appPrefs.setBoolean(_appPrefs.FIRST_LAUNCH, true);
+		}
 	}
 	
 	@Override

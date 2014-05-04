@@ -13,29 +13,36 @@ import android.widget.ListView;
 import com.example.raven.adapters.HistoryCursorAdapter;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.AppPreferences;
 import com.example.raven.services.ContactObserverService;
 
 public class HistoryActivity extends Activity implements OnItemClickListener
 {
-	public static RavenDAL dal;
-	public static HistoryCursorAdapter mca;
-	
 	// menu
 	private final int groupId = 1;
-	// private final int NewMessageId = Menu.FIRST;
 	private final int GlobalSettingsId = Menu.FIRST;
 	private final int AboutId = Menu.FIRST + 1;
 	
+	private AppPreferences _appPrefs;
+	public static RavenDAL dal;
+	public static HistoryCursorAdapter mca;
 	private ListView list;
 	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		_appPrefs = new AppPreferences(getApplicationContext());
+		if (!_appPrefs.getBoolean(_appPrefs.FIRST_LAUNCH)) {
+			//open global settings
+			Intent intent = new Intent(this, GlobalSettings.class);
+			startActivity(intent);
+		}
+
+		
 		setContentView(R.layout.activity_history);
-		
 		dal = new RavenDAL(this);
-		
 		dal.addFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
 				Constants.CREATE_SERVICE_INSTANCE);
 		
@@ -84,11 +91,6 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		
-		// Intent NewMessageIntent = new Intent(this, NewMessage.class);
-		// menu.add(groupId, NewMessageId, NewMessageId,
-		// "New message").setIntent(
-		// NewMessageIntent);
 		
 		Intent GlobalSettingsIntent = new Intent(this, GlobalSettings.class);
 		menu.add(groupId, GlobalSettingsId, GlobalSettingsId, "Preferences")

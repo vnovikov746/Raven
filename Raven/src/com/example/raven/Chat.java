@@ -12,20 +12,27 @@ import android.widget.Toast;
 
 import com.example.raven.adapters.ChatCursorAdapter;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.AppPreferences;
 import com.example.raven.objects.SmsSender;
 
 public class Chat extends Activity
 {
+	// menu
+	private final int groupId = 1;
+	private final int ChatSettingsId = Menu.FIRST;
+	
 	private RavenDAL dal = HistoryActivity.dal;
 	private String phoneNo;
 	public static ListView list;
 	public static ChatCursorAdapter mca;
 	private SmsSender sender;
+	private AppPreferences _appPrefs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		_appPrefs = new AppPreferences(getApplicationContext());
 		setContentView(R.layout.activity_chat);
 		sender = new SmsSender(this);
 		
@@ -35,6 +42,21 @@ public class Chat extends Activity
 		{
 			populateMessages(phoneNo);
 		}
+		
+		
+		//get data from db settings per contact
+		//do we always translate in?
+//		if (translate in)?
+//			_appPrefs.setBoolean(_appPrefs.TRANSLATE_IN, true);
+//		else
+//			_appPrefs.setBoolean(_appPrefs.TRANSLATE_IN, false);
+//		if (translate out)?
+//			_appPrefs.setBoolean(_appPrefs.TRANSLATE_OUT, true);
+//		else
+//			_appPrefs.setBoolean(_appPrefs.TRANSLATE_OUT, false);
+		
+		
+		
 	}
 	
 	@Override
@@ -52,9 +74,12 @@ public class Chat extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.chat, menu);
-		return true;
+		
+		Intent ChatSettingsIntent = new Intent(this, ChatSettings.class);
+		menu.add(groupId, ChatSettingsId, ChatSettingsId, "Chat settings")
+				.setIntent(ChatSettingsIntent);
+		
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 	public void populateMessages(String phoneNo)
@@ -73,6 +98,7 @@ public class Chat extends Activity
 		
 		if(phoneNo.length() > 0 && message.length() > 0)
 		{
+			
 			sender.send(phoneNo, message);
 			list.setSelection(list.getAdapter().getCount()-1);
 			

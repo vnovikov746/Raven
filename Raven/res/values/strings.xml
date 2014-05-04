@@ -19,5 +19,7 @@
     <string name="txt">txt</string>
     <string name="ChooseLanguage">Choose your language</string>
     <string name="confirm">Confirm</string>
+    <string name="translateIn">Translate Incoming messages?</string>
+    <string name="translateOut">Translate outgoing meeages?</string>
 
 </resources>
