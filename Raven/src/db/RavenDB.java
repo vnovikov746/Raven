@@ -150,7 +150,7 @@ public class RavenDB extends SQLiteOpenHelper
 				+ Constants.COLUMN_CONTACT_SUR_NAME + ","
 				+ Constants.COLUMN_CONTACT_TRANSLATE + ","
 				+ Constants.COLUMN_CONTACT_PHONE_NUM + " FROM "
-				+ Constants.TABLE_CONTACTS + "WHERE"
+				+ Constants.TABLE_CONTACTS + " WHERE "
 				+ Constants.COLUMN_CONTACT_ID + "='" + contactId + "';";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -174,8 +174,8 @@ public class RavenDB extends SQLiteOpenHelper
 		
 		selectQuery = "SELECT " + txtType + "," + Constants.COLUMN_MESSAGE_TIME
 				+ "," + Constants.COLUMN_MESSAGE_RECEIVED + " FROM "
-				+ Constants.TABLE_MESSAGES + "WHERE"
-				+ Constants.COLUMN_CONTACT_ID + "='" + contactId + "';";
+				+ Constants.TABLE_MESSAGES + " WHERE "
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + "='" + contactId + "';";
 		
 		c = db.rawQuery(selectQuery, null);
 		if(c.moveToLast())
@@ -199,7 +199,7 @@ public class RavenDB extends SQLiteOpenHelper
 		LinkedList<Message> messages = new LinkedList<Message>();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		String selectQuery = "SELECT DISTINCT"
+		String selectQuery = "SELECT DISTINCT "
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT + " FROM "
 				+ Constants.TABLE_MESSAGES + ";";
 		

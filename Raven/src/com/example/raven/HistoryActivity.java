@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import db.RavenDAL;
 
 public class HistoryActivity extends Activity
@@ -21,29 +24,37 @@ public class HistoryActivity extends Activity
 		setContentView(R.layout.activity_history);
 		
 		LinkedList<Message> messages = dal.getAllLastMessages();
-		//
-		// TableLayout historyTable = (TableLayout)
-		// findViewById(R.id.historyTable);
-		// historyTable.setStretchAllColumns(true);
-		// historyTable.bringToFront();
-		//
-		// historyTable.removeAllViews();
-		//
-		// TableRow tr = new TableRow(this);
-		// historyTable.addView(tr);
-		//
-		// for(int i = 1; i < messages.size(); i++)
-		// {
-		// tr = new TableRow(this);
-		// TextView tv1 = new TextView(this);
-		// tv1.setText("" + messages.get(i).getContactPhoneNum() + " "
-		// + messages.get(i).getMessageTime() + " "
-		// + messages.get(i).getMessageTxt());
-		//
-		// tr.addView(tv1);
-		//
-		// historyTable.addView(tr);
-		// }
+		
+		TableLayout historyTable = (TableLayout)
+		findViewById(R.id.historyTable);
+		historyTable.setStretchAllColumns(true);
+		historyTable.bringToFront();
+		
+		historyTable.removeAllViews();
+		
+		TableRow tr = new TableRow(this);
+		historyTable.addView(tr);
+		
+		//////////////////////
+		messages.add(new Message("a a", "Hello", "12:45", 0, "0545424151"));
+		messages.add(new Message("a a", "Hi", "12:46", 1, "0545424151"));
+		messages.add(new Message("a a", "Helllllllo", "12:47", 0, "0545424151"));
+		messages.add(new Message("a a", "Hiiiii", "12:48", 1, "0545424151"));
+		messages.add(new Message("a a", "Hahahaha", "12:49", 0, "0545424151"));
+		//////////////////////
+		
+		for(int i = 0; i < messages.size(); i++)
+		{
+			tr = new TableRow(this);
+			TextView tv1 = new TextView(this);
+			tv1.setText("" + messages.get(i).getContactPhoneNum() + " "
+			+ messages.get(i).getMessageTime() + " "
+			+ messages.get(i).getMessageTxt());
+			
+		 	tr.addView(tv1);
+			
+			historyTable.addView(tr);
+		}
 	}
 	
 	@Override
