@@ -1,4 +1,4 @@
-package db;
+package com.example.raven.db;
 
 import android.provider.BaseColumns;
 

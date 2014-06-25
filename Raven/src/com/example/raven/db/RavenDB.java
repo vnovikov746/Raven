@@ -1,11 +1,12 @@
-package db;
+package com.example.raven.db;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import Objects.Message;
+import com.example.raven.Objects.Message;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
