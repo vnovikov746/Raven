@@ -1,4 +1,4 @@
-package com.example.raven.Objects;
+package com.example.raven.objects;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -71,7 +71,7 @@ public class SmsReceiver extends BroadcastReceiver
                 // Here you can add any your code to work with incoming SMS
                 // I added encrypting of all received SMS 
                 
-                putSmsToDatabase( contentResolver, sms );
+//                putSmsToDatabase( contentResolver, sms );
             }
             
             // Display SMS message

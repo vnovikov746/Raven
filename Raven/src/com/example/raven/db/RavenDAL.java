@@ -2,7 +2,7 @@ package com.example.raven.db;
 
 import java.util.LinkedList;
 
-import com.example.raven.Objects.Message;
+import com.example.raven.objects.Message;
 
 import android.content.Context;
 

@@ -8,10 +8,10 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 
-import com.example.raven.Objects.Message;
-import com.example.raven.Objects.SmsReceiver;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.Message;
+import com.example.raven.objects.SmsReceiver;
 
 import android.app.Activity;
 import android.content.ContentResolver;
