@@ -25,7 +25,7 @@ public class HistoryActivity extends Activity
 {
 	public static ArrayList<Map<String, String>> mPeopleList;
 	
-	private RavenDAL dal = new RavenDAL(this);
+	private RavenDAL dal;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -110,12 +110,11 @@ public class HistoryActivity extends Activity
 			}
 		}
 		people.close();
-		
-		startManagingCursor(people);
 	}
 	
 	public void showHistory()
 	{
+		dal = new RavenDAL(this);
 		LinkedList<Message> messages = dal.getAllLastMessages();
 		
 		TableLayout historyTable = (TableLayout) findViewById(R.id.historyTable);
