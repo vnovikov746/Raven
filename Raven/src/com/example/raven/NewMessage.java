@@ -56,10 +56,17 @@ public class NewMessage extends Activity
 	{
 		super.onResume();
 		Intent in = getIntent();
-		String phoneNum = "";
-		if(!phoneNum.equals(""))
+		try
 		{
-			mTxtPhoneNo.setText(in.getStringExtra("PhoneNum"));
+			String phoneNum = in.getStringExtra("phoneNum");
+			if(!phoneNum.equals(""))
+			{
+				mTxtPhoneNo.setText(phoneNum);
+			}
+		}
+		catch(Exception e)
+		{	
+			
 		}
 	}
 	

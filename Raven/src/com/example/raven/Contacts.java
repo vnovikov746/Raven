@@ -44,7 +44,7 @@ public class Contacts extends Activity
 					String phone = items.getText().toString().split("\n")[1];
 					Context context = getApplicationContext();
 					Intent intent = new Intent(context, NewMessage.class);
-					intent.putExtra("PhoneNum", phone);
+					intent.putExtra("phoneNum", phone);
 					startActivity(intent);
 				}
 			});
