@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleAdapter;
 import db.Constants;
@@ -59,6 +58,21 @@ public class NewMessage extends Activity
 	}
 	
 	@Override
+	public void onResume()
+	{
+		Intent in = getIntent();
+		String phoneNum = "";
+		if(in != null)
+		{
+			phoneNum = in.getStringExtra("PhoneNum");
+		}
+		if(!phoneNum.equals(""))
+		{
+			mTxtPhoneNo.setText(in.getStringExtra("PhoneNum"));
+		}
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -68,8 +82,7 @@ public class NewMessage extends Activity
 	
 	public void onSendClick(View v)
 	{
-		EditText phoneTxt = (EditText) findViewById(R.id.mmWhoNo);
-		String phoneNum = phoneTxt.getText().toString().trim();
+		String phoneNum = mTxtPhoneNo.getText().toString().trim();
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String messageTxt = smsTxt.getText().toString().trim();
 		dal.addMessage(messageTxt, null, phoneNum, Constants.SENT_BY_ME,

@@ -8,37 +8,43 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".HistoryActivity" >
 
-    <TableLayout
-        android:id="@+id/historyTable"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/NewMessageBtn" >
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-        </TableRow>
-    </TableLayout>
-
     <Button
         android:id="@+id/NewMessageBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
         android:onClick="onSendNew"
         android:text="@string/NewMessage" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/NewMessageBtn" >
+
+        <TableLayout
+            android:id="@+id/historyTable"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/tableRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+            </TableRow>
+        </TableLayout>
+
+    </ScrollView>
 
     <Button
         android:id="@+id/updateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/historyTable"
+        android:layout_alignBottom="@+id/NewMessageBtn"
         android:layout_toRightOf="@+id/NewMessageBtn"
-        android:text="Temp Update" />
+        android:onClick="onUpdateClick"
+        android:text="@string/updateBtn" />
 
 </RelativeLayout>

@@ -3,8 +3,12 @@ package com.example.raven;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -30,6 +34,20 @@ public class Contacts extends Activity
 		{
 			tr = new TableRow(this);
 			TextView tv = new TextView(this);
+			tv.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					TableRow tr = (TableRow) v.getParent();
+					TextView items = (TextView) tr.getChildAt(0);
+					String phone = items.getText().toString().split("\n")[1];
+					Context context = getApplicationContext();
+					Intent intent = new Intent(context, NewMessage.class);
+					intent.putExtra("PhoneNum", phone);
+					startActivity(intent);
+				}
+			});
 			String txt = "";
 			for(Map.Entry<String, String> entry : HistoryActivity.mPeopleList
 					.get(i).entrySet())

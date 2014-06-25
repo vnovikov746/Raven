@@ -19,14 +19,13 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import db.Constants;
 import db.RavenDAL;
 
-public class HistoryActivity extends Activity implements OnClickListener
+public class HistoryActivity extends Activity
 {
 	public static ArrayList<Map<String, String>> mPeopleList;
 	
@@ -41,8 +40,6 @@ public class HistoryActivity extends Activity implements OnClickListener
 		mPeopleList = new ArrayList<Map<String, String>>();
 		PopulatePeopleList();
 		showHistory();
-		
-		this.findViewById( R.id.updateButton ).setOnClickListener( this );
 	}
 	
 	@Override
@@ -167,26 +164,32 @@ public class HistoryActivity extends Activity implements OnClickListener
 		Intent intent = new Intent(this, NewMessage.class);
 		startActivity(intent);
 	}
-
-	@Override
-	public void onClick(View v) {
+	
+	public void onUpdateClick(View v)
+	{
 		
 		ContentResolver contentResolver = getContentResolver();
-		Cursor cursor = contentResolver.query( Uri.parse( "content://sms/inbox" ), null, null, null, null);
-
-		int indexBody = cursor.getColumnIndex( SmsReceiver.BODY );
-		int indexAddr = cursor.getColumnIndex( SmsReceiver.ADDRESS );
+		Cursor cursor = contentResolver.query(Uri.parse("content://sms/inbox"),
+				null, null, null, null);
 		
-		if ( indexBody < 0 || !cursor.moveToFirst() ) return;
+		int indexBody = cursor.getColumnIndex(SmsReceiver.BODY);
+		int indexAddr = cursor.getColumnIndex(SmsReceiver.ADDRESS);
+		
+		if(indexBody < 0 || !cursor.moveToFirst())
+		{
+			return;
+		}
 		
 		do
 		{
-//			String str = "Sender: " + cursor.getString( indexAddr ) + "\n" + cursor.getString( indexBody );
-//			smsList.add( str );
-			dal.addMessage(cursor.getString( indexBody ), null, cursor.getString( indexAddr ), Constants.SENT_BY_ME,
+			// String str = "Sender: " + cursor.getString( indexAddr ) + "\n" +
+			// cursor.getString( indexBody );
+			// smsList.add( str );
+			dal.addMessage(cursor.getString(indexBody), null,
+					cursor.getString(indexAddr), Constants.SENT_BY_ME,
 					Constants.READ, Constants.NOT_SENT);
 		}
-		while( cursor.moveToNext() );
+		while(cursor.moveToNext());
 		
 		showHistory();
 		

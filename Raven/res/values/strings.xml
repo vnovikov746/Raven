@@ -10,5 +10,6 @@
     <string name="NewMessage">New</string>
     <string name="contacts">Contacts</string>
     <string name="title_activity_contacts">Contacts</string>
+    <string name="updateBtn">Update Messages</string>
 
 </resources>
