@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import db.Constants;
 import db.RavenDAL;
 
 public class HistoryActivity extends Activity
@@ -32,7 +33,7 @@ public class HistoryActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
-		
+		dal = new RavenDAL(this);
 		mPeopleList = new ArrayList<Map<String, String>>();
 		PopulatePeopleList();
 		showHistory();
@@ -114,7 +115,6 @@ public class HistoryActivity extends Activity
 	
 	public void showHistory()
 	{
-		dal = new RavenDAL(this);
 		LinkedList<Message> messages = dal.getAllLastMessages();
 		
 		TableLayout historyTable = (TableLayout) findViewById(R.id.historyTable);
@@ -130,8 +130,8 @@ public class HistoryActivity extends Activity
 		{
 			messages.add(new Message("No messages",
 					new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale
-							.getDefault()).format(new Date()), 1,
-					"Raven Service"));
+							.getDefault()).format(new Date()),
+					Constants.RECEIVED, "Raven Service"));
 		}
 		
 		for(int i = 0; i < messages.size(); i++)

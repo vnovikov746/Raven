@@ -30,4 +30,11 @@ public class Constants implements BaseColumns
 	
 	public static final String COLUMN_COUNTRY_NAME = "COUNTRY_NAME";
 	public static final String COLUMN_COUNTRY_LANGUAGE = "COUNTRY_LANGUAGE";
+	
+	public static final int SENT_BY_ME = 0;
+	public static final int RECEIVED = 1;
+	public static final int NOT_READ = 0;
+	public static final int READ = 1;
+	public static final int NOT_SENT = 0;
+	public static final int SENT = 1;
 }

@@ -13,6 +13,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleAdapter;
+import db.Constants;
 import db.RavenDAL;
 
 public class NewMessage extends Activity
@@ -71,7 +72,8 @@ public class NewMessage extends Activity
 		String phoneNum = phoneTxt.getText().toString().trim();
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String messageTxt = smsTxt.getText().toString().trim();
-		dal.addMessage(messageTxt, null, phoneNum, 0, 1, 1);
+		dal.addMessage(messageTxt, null, phoneNum, Constants.SENT_BY_ME,
+				Constants.READ, Constants.NOT_SENT);
 	}
 	
 	public void onContactsClick(View v)
