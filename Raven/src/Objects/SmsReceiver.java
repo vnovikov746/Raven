@@ -75,7 +75,7 @@ public class SmsReceiver extends BroadcastReceiver
             }
             
             // Display SMS message
-            Toast.makeText( context, messages, Toast.LENGTH_SHORT ).show();
+            Toast.makeText( context, "RAVEN:"+messages, Toast.LENGTH_SHORT ).show();
         }
         
         // WARNING!!! 
