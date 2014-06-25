@@ -1,4 +1,4 @@
-package com.example.raven.Objects;
+package com.example.raven.objects;
 
 /*
  * This class represents a message with the contact name with whom the conversation was, the text and the time it was sent

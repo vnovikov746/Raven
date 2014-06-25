@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import com.example.raven.Objects.Message;
+import com.example.raven.objects.Message;
 
 import android.content.ContentValues;
 import android.content.Context;
