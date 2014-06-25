@@ -6,24 +6,17 @@ package Objects;
 public class Message
 {
 	private int received;
-	private String contactName;
 	private String contactPhoneNum;
 	private String messageTxt;
 	private String messageTime;
 	
-	public Message(String contactName, String messageTxt, String messageTime,
-			int received, String contactPhoneNum)
+	public Message(String messageTxt, String messageTime, int received,
+			String contactPhoneNum)
 	{
-		this.contactName = contactName;
 		this.messageTxt = messageTxt;
 		this.messageTime = messageTime;
 		this.received = received;
 		this.contactPhoneNum = contactPhoneNum;
-	}
-	
-	public String getContactName()
-	{
-		return contactName;
 	}
 	
 	public String getMessageTxt()

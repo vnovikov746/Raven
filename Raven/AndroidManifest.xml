@@ -8,6 +8,8 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -25,6 +27,10 @@
         <activity
             android:name="com.example.raven.NewMessage"
             android:label="@string/title_activity_new_message" >
+        </activity>
+        <activity
+            android:name="com.example.raven.Contacts"
+            android:label="@string/title_activity_contacts" >
         </activity>
     </application>
 

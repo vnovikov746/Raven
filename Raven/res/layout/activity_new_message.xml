@@ -8,18 +8,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".NewMessage" >
 
-    <EditText
-        android:id="@+id/PhoneNum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="phone" >
+	<AutoCompleteTextView
+	    android:id="@+id/mmWhoNo"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentTop="true"
+	    android:layout_marginTop="32dp"
+	    android:layout_toLeftOf="@+id/chooseContactBtn" >
 
-        <requestFocus />
-    </EditText>
+	</AutoCompleteTextView>
 
     <MultiAutoCompleteTextView
         android:id="@+id/SmsTxt"
@@ -27,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/mmWhoNo"
         android:ems="10"
         android:text="@string/blank" />
 
@@ -35,9 +33,18 @@
         android:id="@+id/SendBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/PhoneNum"
-        android:layout_alignRight="@+id/SmsTxt"
+        android:layout_alignBottom="@+id/SmsTxt"
+        android:layout_alignParentRight="true"
         android:onClick="onSendClick"
         android:text="@string/sendBtn" />
+
+    <Button
+        android:id="@+id/chooseContactBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/mmWhoNo"
+        android:layout_alignParentRight="true"
+        android:onClick="onContactsClick"
+        android:text="@string/contacts" />
 
 </RelativeLayout>

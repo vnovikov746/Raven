@@ -8,5 +8,7 @@
     <string name="sendBtn">Send</string>
     <string name="blank"></string>
     <string name="NewMessage">New</string>
-    
+    <string name="contacts">Contacts</string>
+    <string name="title_activity_contacts">Contacts</string>
+
 </resources>

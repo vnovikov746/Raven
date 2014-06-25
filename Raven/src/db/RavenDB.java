@@ -27,8 +27,6 @@ public class RavenDB extends SQLiteOpenHelper
 		db.execSQL("CREATE TABLE " + Constants.TABLE_CONTACTS + "("
 				+ Constants.COLUMN_CONTACT_ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
-				+ Constants.COLUMN_CONTACT_NAME + " TEXT_TYPE, "
-				+ Constants.COLUMN_CONTACT_SUR_NAME + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_PHONE_NUM + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_LANGUAGE + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_TIME + " TEXT_TYPE, "
@@ -40,7 +38,7 @@ public class RavenDB extends SQLiteOpenHelper
 				+ Constants.COLUMN_MESSAGE_ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT
-				+ " INTEGRER, " // contacts id
+				+ " TEXT_TYPE, " // contacts phone
 				+ Constants.COLUMN_MESSAGE_RECEIVED
 				+ " INTEGER, " // received or sent
 				+ Constants.COLUMN_MESSAGE_TXT + " TEXT_TYPE, "
@@ -73,14 +71,12 @@ public class RavenDB extends SQLiteOpenHelper
 	/*
 	 * Add Contact to contacts table
 	 */
-	public void addContact(String name, String surName, String phoneNum,
-			String language, int transtale, String time)
+	public void addContact(String phoneNum, String language, int transtale,
+			String time)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put(Constants.COLUMN_CONTACT_NAME, name);
-		values.put(Constants.COLUMN_CONTACT_SUR_NAME, surName);
 		values.put(Constants.COLUMN_CONTACT_PHONE_NUM, phoneNum);
 		values.put(Constants.COLUMN_CONTACT_LANGUAGE, language);
 		values.put(Constants.COLUMN_CONTACT_TRANSLATE, transtale);
@@ -93,7 +89,7 @@ public class RavenDB extends SQLiteOpenHelper
 	/*
 	 * Add message to messages table
 	 */
-	public void addMessage(String txt, String transTxt, int contact,
+	public void addMessage(String txt, String transTxt, String contactPhone,
 			int received, int read, int sent)
 	{
 		String currentTime;
@@ -105,7 +101,7 @@ public class RavenDB extends SQLiteOpenHelper
 		ContentValues values = new ContentValues();
 		values.put(Constants.COLUMN_MESSAGE_TXT, txt);
 		values.put(Constants.COLUMN_MESSAGE_TRANSTATED_TXT, transTxt);
-		values.put(Constants.COLUMN_MESSAGE_TO_CONTACT, contact);
+		values.put(Constants.COLUMN_MESSAGE_TO_CONTACT, contactPhone);
 		values.put(Constants.COLUMN_MESSAGE_RECEIVED, received);
 		values.put(Constants.COLUMN_MESSAGE_READ, read);
 		values.put(Constants.COLUMN_MESSAGE_SENT, sent);
@@ -133,12 +129,10 @@ public class RavenDB extends SQLiteOpenHelper
 	/*
 	 * Get last message from a contact
 	 */
-	public Message getLastMessage(int contactId)
+	public Message getLastMessage(String contactPhone)
 	{
 		int translate = 0;
 		int received = 0;
-		String contactName = "";
-		String contactSurName = "";
 		String contactPhoneNum = "";
 		String txtType = "";
 		String messageTxt = "";
@@ -146,20 +140,15 @@ public class RavenDB extends SQLiteOpenHelper
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		
-		String selectQuery = "SELECT " + Constants.COLUMN_CONTACT_NAME + ","
-				+ Constants.COLUMN_CONTACT_SUR_NAME + ","
-				+ Constants.COLUMN_CONTACT_TRANSLATE + ","
-				+ Constants.COLUMN_CONTACT_PHONE_NUM + " FROM "
-				+ Constants.TABLE_CONTACTS + " WHERE "
-				+ Constants.COLUMN_CONTACT_ID + "='" + contactId + "';";
+		String selectQuery = "SELECT " + Constants.COLUMN_CONTACT_TRANSLATE
+				+ " FROM " + Constants.TABLE_CONTACTS + " WHERE "
+				+ Constants.COLUMN_CONTACT_PHONE_NUM + "='" + contactPhone
+				+ "';";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
 		if(c.moveToFirst())
 		{
-			contactName = c.getString(0);
-			contactSurName = c.getString(1);
-			translate = c.getInt(2);
-			contactPhoneNum = c.getString(3);
+			translate = c.getInt(0);
 		}
 		c.close();
 		
@@ -175,7 +164,8 @@ public class RavenDB extends SQLiteOpenHelper
 		selectQuery = "SELECT " + txtType + "," + Constants.COLUMN_MESSAGE_TIME
 				+ "," + Constants.COLUMN_MESSAGE_RECEIVED + " FROM "
 				+ Constants.TABLE_MESSAGES + " WHERE "
-				+ Constants.COLUMN_MESSAGE_TO_CONTACT + "='" + contactId + "';";
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + "='" + contactPhone
+				+ "';";
 		
 		c = db.rawQuery(selectQuery, null);
 		if(c.moveToLast())
@@ -187,8 +177,7 @@ public class RavenDB extends SQLiteOpenHelper
 		c.close();
 		db.close();
 		
-		return new Message(contactName + " " + contactSurName, messageTxt,
-				messageTime, received, contactPhoneNum);
+		return new Message(messageTxt, messageTime, received, contactPhoneNum);
 	}
 	
 	/*
@@ -208,7 +197,7 @@ public class RavenDB extends SQLiteOpenHelper
 		{
 			do
 			{
-				messages.add(getLastMessage(c.getInt(0)));
+				messages.add(getLastMessage(c.getString(0)));
 			}
 			while(c.moveToNext());
 		}

@@ -20,16 +20,16 @@ public class RavenDAL
 	public void addContact(String name, String surName, String phoneNum,
 			String language, int transtale, String time)
 	{
-		db.addContact(name, surName, phoneNum, language, transtale, time);
+		db.addContact(name, surName, transtale, time);
 	}
 	
 	/*
 	 * Add message to messages table
 	 */
-	public void addMessage(String txt, String transTxt, int contact,
+	public void addMessage(String txt, String transTxt, String contactPhone,
 			int received, int read, int sent)
 	{
-		db.addMessage(txt, transTxt, contact, received, read, sent);
+		db.addMessage(txt, transTxt, contactPhone, received, read, sent);
 	}
 	
 	/*
@@ -43,7 +43,7 @@ public class RavenDAL
 	/*
 	 * Get last message from a contact
 	 */
-	public Message getLastMessage(int contactId)
+	public Message getLastMessage(String contactId)
 	{
 		return db.getLastMessage(contactId);
 	}
