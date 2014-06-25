@@ -1,8 +1,9 @@
-package db;
+package com.example.raven.db;
 
 import java.util.LinkedList;
 
-import Objects.Message;
+import com.example.raven.Objects.Message;
+
 import android.content.Context;
 
 public class RavenDAL

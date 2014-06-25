@@ -12,8 +12,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleAdapter;
-import db.Constants;
-import db.RavenDAL;
+
+import com.example.raven.db.Constants;
+import com.example.raven.db.RavenDAL;
 
 public class NewMessage extends Activity
 {
@@ -50,22 +51,12 @@ public class NewMessage extends Activity
 		mTxtPhoneNo.setAdapter(mAdapter);
 	}
 	
-	public void onContactClick(View v)
-	{
-		String[] contactTokens = mTxtPhoneNo.getText().toString().split("=");
-		String phoneNum = contactTokens[contactTokens.length - 1];
-		mTxtPhoneNo.setText(phoneNum);
-	}
-	
 	@Override
 	public void onResume()
 	{
+		super.onResume();
 		Intent in = getIntent();
 		String phoneNum = "";
-		if(in != null)
-		{
-			phoneNum = in.getStringExtra("PhoneNum");
-		}
 		if(!phoneNum.equals(""))
 		{
 			mTxtPhoneNo.setText(in.getStringExtra("PhoneNum"));

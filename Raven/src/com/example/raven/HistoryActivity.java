@@ -8,8 +8,11 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 
-import Objects.Message;
-import Objects.SmsReceiver;
+import com.example.raven.Objects.Message;
+import com.example.raven.Objects.SmsReceiver;
+import com.example.raven.db.Constants;
+import com.example.raven.db.RavenDAL;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -22,8 +25,6 @@ import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import db.Constants;
-import db.RavenDAL;
 
 public class HistoryActivity extends Activity
 {
