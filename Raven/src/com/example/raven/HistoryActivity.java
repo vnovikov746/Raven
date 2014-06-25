@@ -1,8 +1,11 @@
 package com.example.raven;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 
 import Objects.Message;
@@ -36,8 +39,9 @@ public class HistoryActivity extends Activity
 	}
 	
 	@Override
-	protected void onResume()
+	public void onResume()
 	{
+		super.onResume();
 		showHistory();
 	}
 	
@@ -123,13 +127,13 @@ public class HistoryActivity extends Activity
 		TableRow tr = new TableRow(this);
 		historyTable.addView(tr);
 		
-		// ////////////////////
-		messages.add(new Message("Hello", "12:45", 0, "0545424151"));
-		messages.add(new Message("Hi", "12:46", 1, "0545424151"));
-		messages.add(new Message("Helllllllo", "12:47", 0, "0545424151"));
-		messages.add(new Message("Hiiiii", "12:48", 1, "0545424151"));
-		messages.add(new Message("Hahahaha", "12:49", 0, "0545424151"));
-		// ////////////////////
+		if(messages.size() == 0)
+		{
+			messages.add(new Message("No messages",
+					new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale
+							.getDefault()).format(new Date()), 1,
+					"Raven Service"));
+		}
 		
 		for(int i = 0; i < messages.size(); i++)
 		{
