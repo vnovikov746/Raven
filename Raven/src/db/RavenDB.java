@@ -162,7 +162,8 @@ public class RavenDB extends SQLiteOpenHelper
 		}
 		
 		selectQuery = "SELECT " + txtType + "," + Constants.COLUMN_MESSAGE_TIME
-				+ "," + Constants.COLUMN_MESSAGE_RECEIVED + " FROM "
+				+ "," + Constants.COLUMN_MESSAGE_RECEIVED + ","
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + " FROM "
 				+ Constants.TABLE_MESSAGES + " WHERE "
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT + "='" + contactPhone
 				+ "';";
@@ -173,6 +174,7 @@ public class RavenDB extends SQLiteOpenHelper
 			messageTxt = c.getString(0);
 			messageTime = c.getString(1);
 			received = c.getInt(2);
+			contactPhoneNum = c.getString(3);
 		}
 		c.close();
 		db.close();

@@ -16,7 +16,6 @@
 	    android:layout_alignParentTop="true"
 	    android:layout_marginTop="32dp"
 	    android:layout_toLeftOf="@+id/chooseContactBtn" >
-
 	</AutoCompleteTextView>
 
     <MultiAutoCompleteTextView

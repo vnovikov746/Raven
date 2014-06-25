@@ -9,33 +9,40 @@ import java.util.Locale;
 import java.util.Map;
 
 import Objects.Message;
+import Objects.SmsReceiver;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import db.Constants;
 import db.RavenDAL;
 
-public class HistoryActivity extends Activity
+public class HistoryActivity extends Activity implements OnClickListener
 {
 	public static ArrayList<Map<String, String>> mPeopleList;
 	
-	private RavenDAL dal = new RavenDAL(this);
+	private RavenDAL dal;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
-		
+		dal = new RavenDAL(this);
 		mPeopleList = new ArrayList<Map<String, String>>();
 		PopulatePeopleList();
 		showHistory();
+		
+		this.findViewById( R.id.updateButton ).setOnClickListener( this );
 	}
 	
 	@Override
@@ -110,8 +117,6 @@ public class HistoryActivity extends Activity
 			}
 		}
 		people.close();
-		
-		startManagingCursor(people);
 	}
 	
 	public void showHistory()
@@ -131,8 +136,8 @@ public class HistoryActivity extends Activity
 		{
 			messages.add(new Message("No messages",
 					new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale
-							.getDefault()).format(new Date()), 1,
-					"Raven Service"));
+							.getDefault()).format(new Date()),
+					Constants.RECEIVED, "Raven Service"));
 		}
 		
 		for(int i = 0; i < messages.size(); i++)
@@ -161,5 +166,29 @@ public class HistoryActivity extends Activity
 	{
 		Intent intent = new Intent(this, NewMessage.class);
 		startActivity(intent);
+	}
+
+	@Override
+	public void onClick(View v) {
+		
+		ContentResolver contentResolver = getContentResolver();
+		Cursor cursor = contentResolver.query( Uri.parse( "content://sms/inbox" ), null, null, null, null);
+
+		int indexBody = cursor.getColumnIndex( SmsReceiver.BODY );
+		int indexAddr = cursor.getColumnIndex( SmsReceiver.ADDRESS );
+		
+		if ( indexBody < 0 || !cursor.moveToFirst() ) return;
+		
+		do
+		{
+//			String str = "Sender: " + cursor.getString( indexAddr ) + "\n" + cursor.getString( indexBody );
+//			smsList.add( str );
+			dal.addMessage(cursor.getString( indexBody ), null, cursor.getString( indexAddr ), Constants.SENT_BY_ME,
+					Constants.READ, Constants.NOT_SENT);
+		}
+		while( cursor.moveToNext() );
+		
+		showHistory();
+		
 	}
 }
