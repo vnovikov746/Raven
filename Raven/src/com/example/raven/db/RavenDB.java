@@ -5,13 +5,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import com.example.raven.objects.Message;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.raven.objects.Message;
 
 public class RavenDB extends SQLiteOpenHelper
 {
@@ -40,7 +40,7 @@ public class RavenDB extends SQLiteOpenHelper
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT
 				+ " TEXT_TYPE, " // contacts phone
-				+ Constants.COLUMN_MESSAGE_RECEIVED
+				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT
 				+ " INTEGER, " // received or sent
 				+ Constants.COLUMN_MESSAGE_TXT + " TEXT_TYPE, "
 				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + " TEXT_TYPE, "
@@ -103,7 +103,7 @@ public class RavenDB extends SQLiteOpenHelper
 		values.put(Constants.COLUMN_MESSAGE_TXT, txt);
 		values.put(Constants.COLUMN_MESSAGE_TRANSTATED_TXT, transTxt);
 		values.put(Constants.COLUMN_MESSAGE_TO_CONTACT, contactPhone);
-		values.put(Constants.COLUMN_MESSAGE_RECEIVED, received);
+		values.put(Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT, received);
 		values.put(Constants.COLUMN_MESSAGE_READ, read);
 		values.put(Constants.COLUMN_MESSAGE_SENT, sent);
 		values.put(Constants.COLUMN_MESSAGE_TIME, currentTime);
@@ -132,55 +132,40 @@ public class RavenDB extends SQLiteOpenHelper
 	 */
 	public Message getLastMessage(String contactPhone)
 	{
-		int translate = 0;
-		int received = 0;
-		String contactPhoneNum = "";
-		String txtType = "";
 		String messageTxt = "";
+		String translatedTxt = "";
 		String messageTime = "";
+		int receivedOrSent = -1;
+		int read = -1;
+		int sent = -1;
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		
-		String selectQuery = "SELECT " + Constants.COLUMN_CONTACT_TRANSLATE
-				+ " FROM " + Constants.TABLE_CONTACTS + " WHERE "
-				+ Constants.COLUMN_CONTACT_PHONE_NUM + "='" + contactPhone
-				+ "';";
-		
-		Cursor c = db.rawQuery(selectQuery, null);
-		if(c.moveToFirst())
-		{
-			translate = c.getInt(0);
-		}
-		c.close();
-		
-		if(translate == 0)
-		{
-			txtType = Constants.COLUMN_MESSAGE_TXT;
-		}
-		else
-		{
-			txtType = Constants.COLUMN_MESSAGE_TRANSTATED_TXT;
-		}
-		
-		selectQuery = "SELECT " + txtType + "," + Constants.COLUMN_MESSAGE_TIME
-				+ "," + Constants.COLUMN_MESSAGE_RECEIVED + ","
-				+ Constants.COLUMN_MESSAGE_TO_CONTACT + " FROM "
+		String selectQuery = "SELECT " + Constants.COLUMN_MESSAGE_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TIME + ","
+				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT + ","
+				+ Constants.COLUMN_MESSAGE_READ + ","
+				+ Constants.COLUMN_MESSAGE_SENT + " FROM "
 				+ Constants.TABLE_MESSAGES + " WHERE "
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT + "='" + contactPhone
 				+ "';";
 		
-		c = db.rawQuery(selectQuery, null);
+		Cursor c = db.rawQuery(selectQuery, null);
 		if(c.moveToLast())
 		{
 			messageTxt = c.getString(0);
-			messageTime = c.getString(1);
-			received = c.getInt(2);
-			contactPhoneNum = c.getString(3);
+			translatedTxt = c.getString(1);
+			messageTime = c.getString(2);
+			receivedOrSent = c.getInt(3);
+			read = c.getInt(4);
+			sent = c.getInt(5);
 		}
 		c.close();
 		db.close();
 		
-		return new Message(messageTxt, messageTime, received, contactPhoneNum);
+		return new Message(messageTxt, translatedTxt, messageTime,
+				contactPhone, receivedOrSent, read, sent);
 	}
 	
 	/*

@@ -21,7 +21,7 @@ public class Constants implements BaseColumns
 	
 	public static final String COLUMN_MESSAGE_ID = "MESSAGE_ID";
 	public static final String COLUMN_MESSAGE_TO_CONTACT = "MESSAGE_TO_CONTACT";
-	public static final String COLUMN_MESSAGE_RECEIVED = "MESSAGE_RECEIVED";
+	public static final String COLUMN_MESSAGE_RECEIVED_OR_SENT = "MESSAGE_RECEIVED_OR_SENT";
 	public static final String COLUMN_MESSAGE_TXT = "MESSAGE_TXT";
 	public static final String COLUMN_MESSAGE_TRANSTATED_TXT = "MESSAGE_TRANSTATED_TXT";
 	public static final String COLUMN_MESSAGE_READ = "MESSAGE_READ";

@@ -5,18 +5,24 @@ package com.example.raven.objects;
  */
 public class Message
 {
-	private int received;
-	private String contactPhoneNum;
-	private String messageTxt;
+	private String messageTxt; // message on original language
+	private String translatedTxt; // translated message (can be null)
 	private String messageTime;
+	private String contactPhoneNum;
+	private int receivedOrSent; // in or out sms
+	private int read; // 0 if not read 1 if already read
+	private int sent; // 1 if the sms was successfully sent, else -- 0
 	
-	public Message(String messageTxt, String messageTime, int received,
-			String contactPhoneNum)
+	public Message(String messageTxt, String translatedTxt, String messageTime,
+			String contactPhoneNum, int receivedOrSent, int read, int sent)
 	{
 		this.messageTxt = messageTxt;
+		this.translatedTxt = translatedTxt;
 		this.messageTime = messageTime;
-		this.received = received;
 		this.contactPhoneNum = contactPhoneNum;
+		this.receivedOrSent = receivedOrSent;
+		this.read = read;
+		this.sent = sent;
 	}
 	
 	public String getMessageTxt()
@@ -24,18 +30,48 @@ public class Message
 		return messageTxt;
 	}
 	
+	public String getTranslatedTxt()
+	{
+		return translatedTxt;
+	}
+	
+	public void setTranslatedTxt(String trnslatedTxt)
+	{
+		this.translatedTxt = trnslatedTxt;
+	}
+	
 	public String getMessageTime()
 	{
 		return messageTime;
 	}
 	
-	public int getReceived()
-	{
-		return received;
-	}
-	
 	public String getContactPhoneNum()
 	{
 		return contactPhoneNum;
+	}
+	
+	public int getReceivedOrSent()
+	{
+		return receivedOrSent;
+	}
+	
+	public int getRead()
+	{
+		return read;
+	}
+	
+	public void setRead(int read)
+	{
+		this.read = read;
+	}
+	
+	public int getSent()
+	{
+		return sent;
+	}
+	
+	public void setSent(int sent)
+	{
+		this.sent = sent;
 	}
 }

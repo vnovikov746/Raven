@@ -149,10 +149,10 @@ public class HistoryActivity extends Activity
 		
 		if(messages.size() == 0)
 		{
-			messages.add(new Message("No messages",
+			messages.add(new Message("No messages", null,
 					new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale
-							.getDefault()).format(new Date()),
-					Constants.RECEIVED, "Raven Service"));
+							.getDefault()).format(new Date()), "Raven Support",
+					Constants.RECEIVED, Constants.READ, Constants.NOT_SENT));
 		}
 		
 		for(int i = 0; i < messages.size(); i++)
@@ -210,6 +210,5 @@ public class HistoryActivity extends Activity
 		while(cursor.moveToNext());
 		
 		showHistory();
-		
 	}
 }
