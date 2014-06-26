@@ -5,6 +5,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,7 +14,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleAdapter;
 
-import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
 
 public class NewMessage extends Activity
@@ -29,6 +29,8 @@ public class NewMessage extends Activity
 		setContentView(R.layout.activity_new_message);
 		
 		mTxtPhoneNo = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);
+		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
+		smsTxt.clearFocus();
 		mTxtPhoneNo.setOnItemClickListener(new OnItemClickListener()
 		{
 			@SuppressWarnings("unchecked")
@@ -40,6 +42,9 @@ public class NewMessage extends Activity
 						.getItemAtPosition(index);
 				String number = map.get("Phone");
 				mTxtPhoneNo.setText("" + number);
+				// InputMethodManager imm = (InputMethodManager)
+				// getSystemService(Context.INPUT_METHOD_SERVICE);
+				// imm.hideSoftInputFromWindow(mTxtPhoneNo.getWindowToken(), 0);
 			}
 		});
 		
@@ -65,9 +70,7 @@ public class NewMessage extends Activity
 			}
 		}
 		catch(Exception e)
-		{	
-			
-		}
+		{}
 	}
 	
 	@Override
@@ -83,8 +86,10 @@ public class NewMessage extends Activity
 		String phoneNum = mTxtPhoneNo.getText().toString().trim();
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String messageTxt = smsTxt.getText().toString().trim();
-		dal.addMessage(messageTxt, null, phoneNum, Constants.SENT_BY_ME,
-				Constants.READ, Constants.NOT_SENT);
+		// dal.addMessage(messageTxt, null, phoneNum, Constants.SENT_BY_ME,
+		// Constants.READ, Constants.NOT_SENT);
+		SmsManager sms = SmsManager.getDefault();
+		sms.sendTextMessage(phoneNum, null, messageTxt, null, null);
 	}
 	
 	public void onContactsClick(View v)

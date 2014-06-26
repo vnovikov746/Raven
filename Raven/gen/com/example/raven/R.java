@@ -25,8 +25,8 @@ public final class R {
     }
     public static final class id {
         public static final int NewMessageBtn=0x7f080002;
-        public static final int SendBtn=0x7f08000a;
-        public static final int SmsTxt=0x7f080009;
+        public static final int SendBtn=0x7f080009;
+        public static final int SmsTxt=0x7f08000a;
         public static final int action_settings=0x7f08000e;
         public static final int ccontName=0x7f08000b;
         public static final int ccontNo=0x7f08000c;

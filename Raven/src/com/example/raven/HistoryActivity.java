@@ -2,16 +2,13 @@ package com.example.raven;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
-
-import com.example.raven.db.Constants;
-import com.example.raven.db.RavenDAL;
-import com.example.raven.objects.Message;
-import com.example.raven.objects.SmsReceiver;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -25,6 +22,11 @@ import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.example.raven.db.Constants;
+import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.Message;
+import com.example.raven.objects.SmsReceiver;
 
 public class HistoryActivity extends Activity
 {
@@ -40,6 +42,21 @@ public class HistoryActivity extends Activity
 		dal = new RavenDAL(this);
 		mPeopleList = new ArrayList<Map<String, String>>();
 		PopulatePeopleList();
+		Collections.sort(mPeopleList, new Comparator<Map<String, String>>()
+		{
+			@Override
+			public int compare(Map<String, String> first,
+					Map<String, String> second)
+			{
+				if(first == null || second == null)
+				{
+					return -1;
+				}
+				String firstValue = first.get("Name");
+				String secondValue = second.get("Name");
+				return firstValue.compareTo(secondValue);
+			}
+		});
 		showHistory();
 	}
 	

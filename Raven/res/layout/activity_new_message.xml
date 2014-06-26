@@ -18,25 +18,6 @@
 	    android:layout_toLeftOf="@+id/chooseContactBtn" >
 	</AutoCompleteTextView>
 
-    <MultiAutoCompleteTextView
-        android:id="@+id/SmsTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/mmWhoNo"
-        android:ems="10"
-        android:text="@string/blank" />
-
-    <Button
-        android:id="@+id/SendBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/SmsTxt"
-        android:layout_alignParentRight="true"
-        android:onClick="onSendClick"
-        android:text="@string/sendBtn" />
-
     <Button
         android:id="@+id/chooseContactBtn"
         android:layout_width="wrap_content"
@@ -45,5 +26,41 @@
         android:layout_alignParentRight="true"
         android:onClick="onContactsClick"
         android:text="@string/contacts" />
+
+    <Button
+        android:id="@+id/SendBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/chooseContactBtn"
+        android:onClick="onSendClick"
+        android:text="@string/sendBtn" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mmWhoNo"
+        android:layout_below="@+id/SendBtn" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/SmsTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/SendBtn"
+        android:layout_alignLeft="@+id/mmWhoNo"
+        android:layout_toLeftOf="@+id/SendBtn"
+        android:ems="10"
+        android:text="@string/blank" >
+
+        <requestFocus />
+    </MultiAutoCompleteTextView>
 
 </RelativeLayout>
