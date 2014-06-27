@@ -2,10 +2,8 @@ package com.example.raven.objects;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -22,37 +20,39 @@ public class SmsReceiver extends BroadcastReceiver
 	
 	
 	// All available column names in SMS table
-    // [_id, thread_id, address, 
-	// person, date, protocol, read, 
-	// status, type, reply_path_present, 
-	// subject, body, service_center, 
+	// [_id, thread_id, address,
+	// person, date, protocol, read,
+	// status, type, reply_path_present,
+	// subject, body, service_center,
 	// locked, error_code, seen]
 	
 	public static final String SMS_EXTRA_NAME = "pdus";
 	public static final String SMS_URI = "content://sms";
 	
 	public static final String ADDRESS = "address";
-    public static final String PERSON = "person";
-    public static final String DATE = "date";
-    public static final String READ = "read";
-    public static final String STATUS = "status";
-    public static final String TYPE = "type";
-    public static final String BODY = "body";
-    public static final String SEEN = "seen";
-    
-    public static final int MESSAGE_TYPE_INBOX = 1;
-    public static final int MESSAGE_TYPE_SENT = 2;
-    
-    public static final int MESSAGE_IS_NOT_READ = 0;
-    public static final int MESSAGE_IS_READ = 1;
-    
-    public static final int MESSAGE_IS_NOT_SEEN = 0;
-    public static final int MESSAGE_IS_SEEN = 1;
+	public static final String PERSON = "person";
+	public static final String DATE = "date";
+	public static final String READ = "read";
+	public static final String STATUS = "status";
+	public static final String TYPE = "type";
+	public static final String BODY = "body";
+	public static final String SEEN = "seen";
 	
-    // Change the password here or give a user possibility to change it
-    public static final byte[] PASSWORD = new byte[]{ 0x20, 0x32, 0x34, 0x47, (byte) 0x84, 0x33, 0x58 };
-    
-	public void onReceive( Context context, Intent intent ) 
+	public static final int MESSAGE_TYPE_INBOX = 1;
+	public static final int MESSAGE_TYPE_SENT = 2;
+	
+	public static final int MESSAGE_IS_NOT_READ = 0;
+	public static final int MESSAGE_IS_READ = 1;
+	
+	public static final int MESSAGE_IS_NOT_SEEN = 0;
+	public static final int MESSAGE_IS_SEEN = 1;
+	
+	// Change the password here or give a user possibility to change it
+	public static final byte[] PASSWORD = new byte[] { 0x20, 0x32, 0x34, 0x47,
+			(byte) 0x84, 0x33, 0x58 };
+	
+	@Override
+	public void onReceive(Context context, Intent intent)
 	{
 		dal = new RavenDAL(context);
     	String body = "";
@@ -107,29 +107,47 @@ public class SmsReceiver extends BroadcastReceiver
         // this.abortBroadcast(); 
 	}
 	
-	private void putSmsToDatabase( ContentResolver contentResolver, SmsMessage sms )
+	private void putSmsToDatabase(Context context,
+			ContentResolver contentResolver, SmsMessage sms)
 	{
+		String body = sms.getMessageBody().toString();
+		String address = sms.getOriginatingAddress();
+		
+		TelephonyManager tm = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		String countryCode = tm.getSimCountryIso();
+		
+		if(address.startsWith("0"))
+		{
+			address = countryCode + address.substring(1);
+		}
+		
+		RavenDAL dal = new RavenDAL(context);
+		dal.addMessage(body, null, address, Constants.RECEIVED,
+				Constants.NOT_READ, Constants.NOT_SENT);
+		
 		// Create SMS row
-        ContentValues values = new ContentValues();
-        values.put( ADDRESS, sms.getOriginatingAddress() );
-        values.put( DATE, sms.getTimestampMillis() );
-        values.put( READ, MESSAGE_IS_NOT_READ );
-        values.put( STATUS, sms.getStatus() );
-        values.put( TYPE, MESSAGE_TYPE_INBOX );
-        values.put( SEEN, MESSAGE_IS_NOT_SEEN );
-        values.put( BODY, sms.getMessageBody().toString() );
-        
-//        try
-//        {
-//        	String encryptedPassword = StringCryptor.encrypt( new String(PASSWORD), sms.getMessageBody().toString() ); 
-//        	values.put( BODY, encryptedPassword );
-//        }
-//        catch ( Exception e ) 
-//        { 
-//        	e.printStackTrace(); 
-//    	}
-        
-        // Push row into the SMS table
-        contentResolver.insert( Uri.parse( SMS_URI ), values );
+		// ContentValues values = new ContentValues();
+		// values.put(ADDRESS, sms.getOriginatingAddress());
+		// values.put(DATE, sms.getTimestampMillis());
+		// values.put(READ, MESSAGE_IS_NOT_READ);
+		// values.put(STATUS, sms.getStatus());
+		// values.put(TYPE, MESSAGE_TYPE_INBOX);
+		// values.put(SEEN, MESSAGE_IS_NOT_SEEN);
+		// values.put(BODY, sms.getMessageBody().toString());
+		//
+		// try
+		// {
+		// String encryptedPassword = StringCryptor.encrypt( new
+		// String(PASSWORD), sms.getMessageBody().toString() );
+		// values.put( BODY, encryptedPassword );
+		// }
+		// catch ( Exception e )
+		// {
+		// e.printStackTrace();
+		// }
+		//
+		// Push row into the SMS table
+		// contentResolver.insert(Uri.parse(SMS_URI), values);
 	}
 }
