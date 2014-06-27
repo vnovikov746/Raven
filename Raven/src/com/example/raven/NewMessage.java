@@ -59,8 +59,6 @@ public class NewMessage extends Activity
 			}
 		});
 		
-		// mPeopleList = dal.getAllContacts();
-		
 		mAdapter = new SimpleAdapter(this, ContactObserverService.mPeopleList,
 				R.layout.custcontview,
 				new String[] { "Name", "Phone", "Type" }, new int[] {

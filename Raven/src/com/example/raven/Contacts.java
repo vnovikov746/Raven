@@ -17,10 +17,6 @@ import com.example.raven.objects.ContactObserverService;
 
 public class Contacts extends Activity
 {
-	// RavenDAL dal = new RavenDAL(this);
-	
-	// private ArrayList<Map<String, String>> mPeopleList;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -36,8 +32,6 @@ public class Contacts extends Activity
 		TableRow tr = new TableRow(this);
 		contactsTable.addView(tr);
 		
-		// dal = new RavenDAL(this);
-		// mPeopleList = dal.getAllContacts();
 		for(int i = 0; i < ContactObserverService.mPeopleList.size(); i++)
 		{
 			Map<String, String> NamePhoneType = ContactObserverService.mPeopleList
