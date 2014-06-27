@@ -25,10 +25,10 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.CountryCodeMap;
 
 public class NewMessage extends Activity
 {
-	private RavenDAL dal = new RavenDAL(this);
 	private SimpleAdapter mAdapter;
 	private AutoCompleteTextView mTxtPhoneNo;
 	
@@ -94,6 +94,7 @@ public class NewMessage extends Activity
 	public void onSendClick(View v)
 	{
 		String phoneNo = mTxtPhoneNo.getText().toString().trim();
+		
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String message = smsTxt.getText().toString().trim();
 		if(phoneNo.length() > 0 && message.length() > 0)
@@ -151,6 +152,15 @@ public class NewMessage extends Activity
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
 		RavenDAL dal = new RavenDAL(this);
+		
+		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		
+		String countryCode = tm.getSimCountryIso();
+		if(phoneNumber.startsWith("0"))
+		{
+			phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
+					+ phoneNumber.substring(1);
+		}
 		dal.addMessage(message, null, phoneNumber, Constants.SENT_BY_ME,
 				Constants.NOT_READ, Constants.NOT_SENT);
 		
