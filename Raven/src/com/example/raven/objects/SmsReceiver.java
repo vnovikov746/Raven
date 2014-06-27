@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
-import com.example.raven.dict.Translator;
 
 public class SmsReceiver extends BroadcastReceiver
 {
@@ -55,8 +53,6 @@ public class SmsReceiver extends BroadcastReceiver
 		Bundle extras = intent.getExtras();
 
 		String messages = "";
-		String body = "";
-		String address = "";
 
 		if(extras != null)
 		{
@@ -71,8 +67,8 @@ public class SmsReceiver extends BroadcastReceiver
 			{
 				SmsMessage sms = SmsMessage.createFromPdu((byte[]) smsExtra[i]);
 
-				body = sms.getMessageBody().toString();
-				address = sms.getOriginatingAddress();
+				String body = sms.getMessageBody().toString();
+				String address = sms.getOriginatingAddress();
 
 				messages += "SMS from " + address + " :\n";
 				messages += body + "\n";
@@ -83,11 +79,6 @@ public class SmsReceiver extends BroadcastReceiver
 				putSmsToDatabase(context, contentResolver, sms);
 			}
 
-//          translated 
-    		Translator t = Raven.SetService(Raven.YANDEX);
-    		Log.d("translate", "RAVEN: "+t.translate("en-he", body));
-			
-			
 			// Display SMS message
 			Toast.makeText(context, "RAVEN: " + messages, Toast.LENGTH_SHORT)
 					.show();
