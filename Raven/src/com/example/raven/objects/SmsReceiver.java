@@ -8,10 +8,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.example.raven.db.Constants;
+import com.example.raven.db.RavenDAL;
+import com.example.raven.dict.Translator;
 
 public class SmsReceiver extends BroadcastReceiver 
 {
+	private RavenDAL dal;
+	private Translator raven;
+	
+	
 	// All available column names in SMS table
     // [_id, thread_id, address, 
 	// person, date, protocol, read, 
@@ -45,6 +54,11 @@ public class SmsReceiver extends BroadcastReceiver
     
 	public void onReceive( Context context, Intent intent ) 
 	{
+		dal = new RavenDAL(context);
+    	String body = "";
+    	String translated = "";
+    	String address = "";
+		
 		// Get SMS map from Intent
         Bundle extras = intent.getExtras();
         
@@ -62,9 +76,10 @@ public class SmsReceiver extends BroadcastReceiver
             {
             	SmsMessage sms = SmsMessage.createFromPdu((byte[])smsExtra[i]);
             	
-            	String body = sms.getMessageBody().toString();
-            	String address = sms.getOriginatingAddress();
+            	body = sms.getMessageBody().toString();
+            	address = sms.getOriginatingAddress();
                 
+            	
                 messages += "SMS from " + address + " :\n";                    
                 messages += body + "\n";
                 
@@ -74,8 +89,16 @@ public class SmsReceiver extends BroadcastReceiver
 //                putSmsToDatabase( contentResolver, sms );
             }
             
+//          translated 
+    		Translator t = Raven.SetService(Raven.YANDEX);
+    		Log.d("translate", "RAVEN: "+t.translate("en-he", body));
+            
             // Display SMS message
             Toast.makeText( context, "RAVEN:"+messages, Toast.LENGTH_SHORT ).show();
+            
+			dal.addMessage(body, null,
+					address, Constants.SENT_BY_ME,
+					Constants.READ, Constants.NOT_SENT);
         }
         
         // WARNING!!! 

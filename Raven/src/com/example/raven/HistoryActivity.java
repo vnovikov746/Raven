@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TableLayout;
@@ -25,7 +26,9 @@ import android.widget.TextView;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.dict.Translator;
 import com.example.raven.objects.Message;
+import com.example.raven.objects.Raven;
 import com.example.raven.objects.SmsReceiver;
 
 public class HistoryActivity extends Activity
@@ -185,6 +188,8 @@ public class HistoryActivity extends Activity
 	
 	public void onUpdateClick(View v)
 	{
+		Translator t = Raven.SetService(Raven.YANDEX);
+		Log.d("translate", "aa"+t.translate("en-he", "שלום"));
 		
 		ContentResolver contentResolver = getContentResolver();
 		Cursor cursor = contentResolver.query(Uri.parse("content://sms/inbox"),
