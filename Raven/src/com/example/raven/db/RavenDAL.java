@@ -1,10 +1,12 @@
 package com.example.raven.db;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
-
-import com.example.raven.objects.Message;
+import java.util.Map;
 
 import android.content.Context;
+
+import com.example.raven.objects.Message;
 
 public class RavenDAL
 {
@@ -18,10 +20,30 @@ public class RavenDAL
 	/*
 	 * Add Contact to contacts table
 	 */
-	public void addContact(String name, String surName, String phoneNum,
-			String language, int transtale, String time)
+	public void addContact(String name, String phoneNum, String type,
+			String language, int transtale)
 	{
-		db.addContact(name, surName, transtale, time);
+		db.addContact(name, phoneNum, type, language, transtale);
+	}
+	
+	/*
+	 * Add all contacts to contacts table
+	 */
+	public void addAllConacts(ArrayList<Map<String, String>> contacts)
+	{
+		for(Map<String, String> map : contacts)
+		{
+			db.addContact(map.get("Name"), map.get("Phone"), map.get("Type"),
+					null, 0);
+		}
+	}
+	
+	/*
+	 * Delete all Contacts
+	 */
+	public void deleteAllContacts()
+	{
+		db.deleteAllContacts();
 	}
 	
 	/*
@@ -55,5 +77,13 @@ public class RavenDAL
 	public LinkedList<Message> getAllLastMessages()
 	{
 		return db.getAllLastMessages();
+	}
+	
+	/*
+	 * Get all Contacts
+	 */
+	public ArrayList<Map<String, String>> getAllContacts()
+	{
+		return db.getAllContacts();
 	}
 }

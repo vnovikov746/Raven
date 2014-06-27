@@ -1,14 +1,9 @@
 package com.example.raven;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Map;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -16,7 +11,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TableLayout;
@@ -25,13 +19,12 @@ import android.widget.TextView;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.ContactObserverService;
 import com.example.raven.objects.Message;
 import com.example.raven.objects.SmsReceiver;
 
 public class HistoryActivity extends Activity
 {
-	public static ArrayList<Map<String, String>> mPeopleList;
-	
 	private RavenDAL dal;
 	
 	@Override
@@ -39,24 +32,11 @@ public class HistoryActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
+		Intent contactService = new Intent(this, ContactObserverService.class);
+		
+		startService(contactService);
+		
 		dal = new RavenDAL(this);
-		mPeopleList = new ArrayList<Map<String, String>>();
-		PopulatePeopleList();
-		Collections.sort(mPeopleList, new Comparator<Map<String, String>>()
-		{
-			@Override
-			public int compare(Map<String, String> first,
-					Map<String, String> second)
-			{
-				if(first == null || second == null)
-				{
-					return -1;
-				}
-				String firstValue = first.get("Name");
-				String secondValue = second.get("Name");
-				return firstValue.compareTo(secondValue);
-			}
-		});
 		showHistory();
 	}
 	
@@ -65,73 +45,6 @@ public class HistoryActivity extends Activity
 	{
 		super.onResume();
 		showHistory();
-	}
-	
-	public void PopulatePeopleList()
-	{
-		mPeopleList.clear();
-		Cursor people = getContentResolver().query(
-				ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-		while(people.moveToNext())
-		{
-			String contactName = people.getString(people
-					.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-			
-			String contactId = people.getString(people
-					.getColumnIndex(ContactsContract.Contacts._ID));
-			String hasPhone = people
-					.getString(people
-							.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-			
-			if((Integer.parseInt(hasPhone) > 0))
-			{
-				// You know have the number so now query it like this
-				Cursor phones = getContentResolver().query(
-						ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-						null,
-						ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-								+ " = " + contactId, null, null);
-				while(phones.moveToNext())
-				{
-					// store numbers and display a dialog letting the user
-					// select which.
-					String phoneNumber = phones
-							.getString(phones
-									.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-					
-					String numberType = phones
-							.getString(phones
-									.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
-					
-					Map<String, String> NamePhoneType = new HashMap<String, String>();
-					
-					NamePhoneType.put("Name", contactName);
-					NamePhoneType.put("Phone", phoneNumber);
-					
-					if(numberType.equals("0"))
-					{
-						NamePhoneType.put("Type", "Work");
-					}
-					else if(numberType.equals("1"))
-					{
-						NamePhoneType.put("Type", "Home");
-					}
-					else if(numberType.equals("2"))
-					{
-						NamePhoneType.put("Type", "Mobile");
-					}
-					else
-					{
-						NamePhoneType.put("Type", "Other");
-					}
-					
-					// Then add this map to the list.
-					mPeopleList.add(NamePhoneType);
-				}
-				phones.close();
-			}
-		}
-		people.close();
 	}
 	
 	public void showHistory()

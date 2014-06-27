@@ -13,11 +13,10 @@ public class Constants implements BaseColumns
 	
 	public static final String COLUMN_CONTACT_ID = "CONTACT_ID";
 	public static final String COLUMN_CONTACT_NAME = "CONTACT_NAME";
-	public static final String COLUMN_CONTACT_SUR_NAME = "CONTACT_SUR_NAME";
+	public static final String COLUMN_CONTACT_TYPE = "CONTACT_TYPE";
 	public static final String COLUMN_CONTACT_PHONE_NUM = "PHONE_NUM";
 	public static final String COLUMN_CONTACT_LANGUAGE = "CONTACT_LANGUAGE";
 	public static final String COLUMN_CONTACT_TRANSLATE = "CONTACT_TRANSLATE";
-	public static final String COLUMN_CONTACT_TIME = "CONTACT_TIME";
 	
 	public static final String COLUMN_MESSAGE_ID = "MESSAGE_ID";
 	public static final String COLUMN_MESSAGE_TO_CONTACT = "MESSAGE_TO_CONTACT";

@@ -1,9 +1,12 @@
 package com.example.raven.db;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -28,9 +31,10 @@ public class RavenDB extends SQLiteOpenHelper
 		db.execSQL("CREATE TABLE " + Constants.TABLE_CONTACTS + "("
 				+ Constants.COLUMN_CONTACT_ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ Constants.COLUMN_CONTACT_NAME + " TEXT_TYPE, "
+				+ Constants.COLUMN_CONTACT_TYPE + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_PHONE_NUM + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_LANGUAGE + " TEXT_TYPE, "
-				+ Constants.COLUMN_CONTACT_TIME + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_TRANSLATE + " INTEGER);");
 		
 		// create messages table
@@ -72,16 +76,17 @@ public class RavenDB extends SQLiteOpenHelper
 	/*
 	 * Add Contact to contacts table
 	 */
-	public void addContact(String phoneNum, String language, int transtale,
-			String time)
+	public void addContact(String name, String phoneNum, String type,
+			String language, int transtale)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
+		values.put(Constants.COLUMN_CONTACT_NAME, name);
+		values.put(Constants.COLUMN_CONTACT_TYPE, type);
 		values.put(Constants.COLUMN_CONTACT_PHONE_NUM, phoneNum);
 		values.put(Constants.COLUMN_CONTACT_LANGUAGE, language);
 		values.put(Constants.COLUMN_CONTACT_TRANSLATE, transtale);
-		values.put(Constants.COLUMN_CONTACT_TIME, time);
 		
 		db.insert(Constants.TABLE_CONTACTS, null, values);
 		db.close();
@@ -192,5 +197,48 @@ public class RavenDB extends SQLiteOpenHelper
 		c.close();
 		db.close();
 		return messages;
+	}
+	
+	/*
+	 * Get all contacts
+	 */
+	public ArrayList<Map<String, String>> getAllContacts()
+	{
+		ArrayList<Map<String, String>> contacts = new ArrayList<Map<String, String>>();
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		String selectQuery = "SELECT " + Constants.COLUMN_CONTACT_NAME + ","
+				+ Constants.COLUMN_CONTACT_PHONE_NUM + ","
+				+ Constants.COLUMN_CONTACT_TYPE + " FROM "
+				+ Constants.TABLE_CONTACTS + ";";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		if(c.moveToFirst())
+		{
+			do
+			{
+				Map<String, String> NamePhoneType = new HashMap<String, String>();
+				NamePhoneType.put("Name", c.getString(0));
+				NamePhoneType.put("Phone", c.getString(1));
+				NamePhoneType.put("Type", c.getString(2));
+				contacts.add(NamePhoneType);
+			}
+			while(c.moveToNext());
+		}
+		c.close();
+		db.close();
+		return contacts;
+	}
+	
+	/*
+	 * Delete all contacts
+	 */
+	public void deleteAllContacts()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		String deleteQuery = "DELETE " + " FROM " + Constants.TABLE_CONTACTS
+				+ ";";
+		db.execSQL(deleteQuery);
+		db.close();
 	}
 }

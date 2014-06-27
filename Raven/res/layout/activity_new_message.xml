@@ -42,12 +42,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/mmWhoNo"
         android:layout_below="@+id/SendBtn" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-        </LinearLayout>
     </ScrollView>
 
     <MultiAutoCompleteTextView

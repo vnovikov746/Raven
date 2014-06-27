@@ -13,8 +13,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.raven.objects.ContactObserverService;
+
 public class Contacts extends Activity
 {
+	// RavenDAL dal = new RavenDAL(this);
+	
+	// private ArrayList<Map<String, String>> mPeopleList;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -30,8 +36,13 @@ public class Contacts extends Activity
 		TableRow tr = new TableRow(this);
 		contactsTable.addView(tr);
 		
-		for(int i = 0; i < HistoryActivity.mPeopleList.size(); i++)
+		// dal = new RavenDAL(this);
+		// mPeopleList = dal.getAllContacts();
+		for(int i = 0; i < ContactObserverService.mPeopleList.size(); i++)
 		{
+			Map<String, String> NamePhoneType = ContactObserverService.mPeopleList
+					.get(i);
+			
 			tr = new TableRow(this);
 			TextView tv = new TextView(this);
 			tv.setOnClickListener(new OnClickListener()
@@ -49,15 +60,8 @@ public class Contacts extends Activity
 				}
 			});
 			String txt = "";
-			for(Map.Entry<String, String> entry : HistoryActivity.mPeopleList
-					.get(i).entrySet())
-			{
-				if(!entry.getKey().contains("Type"))
-				{
-					txt += entry.getValue() + "\n";
-				}
-			}
-			txt += "\n";
+			txt += NamePhoneType.get("Name") + "\n";
+			txt += NamePhoneType.get("Phone") + "\n\n";
 			tv.setText(txt);
 			tr.addView(tv);
 			contactsTable.addView(tr);

@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.ContactObserverService;
 import com.example.raven.objects.CountryCodeMap;
 
 public class NewMessage extends Activity
@@ -58,7 +59,9 @@ public class NewMessage extends Activity
 			}
 		});
 		
-		mAdapter = new SimpleAdapter(this, HistoryActivity.mPeopleList,
+		// mPeopleList = dal.getAllContacts();
+		
+		mAdapter = new SimpleAdapter(this, ContactObserverService.mPeopleList,
 				R.layout.custcontview,
 				new String[] { "Name", "Phone", "Type" }, new int[] {
 						R.id.ccontName, R.id.ccontNo, R.id.ccontType });
@@ -70,10 +73,10 @@ public class NewMessage extends Activity
 	public void onResume()
 	{
 		super.onResume();
-		Intent in = getIntent();
+		Intent intent = getIntent();
 		try
 		{
-			String phoneNum = in.getStringExtra("phoneNum");
+			String phoneNum = intent.getStringExtra("phoneNum");
 			if(!phoneNum.equals(""))
 			{
 				mTxtPhoneNo.setText(phoneNum);
@@ -97,6 +100,7 @@ public class NewMessage extends Activity
 		
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String message = smsTxt.getText().toString().trim();
+		
 		if(phoneNo.length() > 0 && message.length() > 0)
 		{
 			TelephonyManager telMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -226,6 +230,10 @@ public class NewMessage extends Activity
 		
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+		
+		Intent intent = new Intent(this, Chat.class);
+		intent.putExtra("phoneNum", phoneNumber);
+		startActivity(intent);
 	}
 	
 	public void onContactsClick(View v)
