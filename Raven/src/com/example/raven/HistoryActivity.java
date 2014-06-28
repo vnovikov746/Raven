@@ -11,15 +11,16 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
@@ -33,6 +34,7 @@ public class HistoryActivity extends Activity
 	public static ArrayList<Map<String, String>> mPeopleList;
 	
 	private SharedPreferences settings;
+	private Editor editor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -40,22 +42,14 @@ public class HistoryActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
 		
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-		{
-			settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
-					0 | MODE_MULTI_PROCESS);
-		}
-		else
-		{
-			settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
-					0);
-		}
+		settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+				MODE_MULTI_PROCESS);
 		
 		dal = new RavenDAL(this);
 		
-		// int updateContacts = settings.getInt(
-		// Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
-		// Constants.UPDATE_CONTACTS);
+		int updateContacts = settings.getInt(
+				Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+				Constants.UPDATE_CONTACTS);
 		
 		int createServiceInstance = settings.getInt(
 				Constants.SHARED_PROCESS_SETTINGS_SERVICE_INSTANCE,
@@ -68,24 +62,25 @@ public class HistoryActivity extends Activity
 			startService(contactService);
 		}
 		
-		// while(updateContacts == Constants.UPDATE_CONTACTS)
+		if(updateContacts == Constants.UPDATE_CONTACTS)
+		{
+			Toast.makeText(this, "Contact List Updating....",
+					Toast.LENGTH_LONG * 2).show();
+			mPeopleList = dal.getAllContacts();
+			editor = settings.edit();
+			editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+					Constants.DONT_UPDATE_CONTACTS);
+			editor.commit();
+		}
+		// mPeopleList = dal.getAllContacts();
+		// if(mPeopleList.isEmpty())
 		// {
-		// if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-		// {
-		// settings = getSharedPreferences(
-		// Constants.SHARED_PROCESS_SETTINGS,
-		// 0 | MODE_MULTI_PROCESS);
+		// Toast.makeText(this, "Contact List Updating....",
+		// Toast.LENGTH_LONG * 2).show();
+		//
+		// Toast.makeText(this, "Enjoy", Toast.LENGTH_SHORT).show();
+		// mPeopleList = dal.getAllContacts();
 		// }
-		// else
-		// {
-		// settings = getSharedPreferences(
-		// Constants.SHARED_PROCESS_SETTINGS, 0);
-		// }
-		// updateContacts = settings.getInt(
-		// Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
-		// Constants.UPDATE_CONTACTS);
-		// }
-		mPeopleList = dal.getAllContacts();
 		showHistory();
 	}
 	

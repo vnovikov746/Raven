@@ -5,6 +5,8 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -12,12 +14,14 @@ import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.raven.db.RavenDAL;
+import com.example.raven.db.Constants;
 
 public class Contacts extends Activity
 {
-	// private SharedPreferences settings;
+	private SharedPreferences settings;
+	private Editor editor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -25,34 +29,23 @@ public class Contacts extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
 		
-		// if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-		// {
-		// settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
-		// 0 | MODE_MULTI_PROCESS);
-		// }
-		// else
-		// {
-		// settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
-		// 0);
-		// }
+		settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+				MODE_MULTI_PROCESS);
 		
-		HistoryActivity.dal = new RavenDAL(this);
+		int updateContacts = settings.getInt(
+				Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+				Constants.UPDATE_CONTACTS);
 		
-		// int updateContacts = settings.getInt(
-		// Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
-		// Constants.UPDATE_CONTACTS);
-		// if(updateContacts == Constants.UPDATE_CONTACTS)
-		// {
-		// try
-		// {
-		// settings.wait();
-		// }
-		// catch(InterruptedException e)
-		// {
-		// e.printStackTrace();
-		// }
-		HistoryActivity.mPeopleList = HistoryActivity.dal.getAllContacts();
-		// }
+		if(updateContacts == Constants.UPDATE_CONTACTS)
+		{
+			Toast.makeText(this, "Contact List Updating....",
+					Toast.LENGTH_LONG * 2).show();
+			HistoryActivity.mPeopleList = HistoryActivity.dal.getAllContacts();
+			editor = settings.edit();
+			editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+					Constants.DONT_UPDATE_CONTACTS);
+			editor.commit();
+		}
 		
 		TableLayout contactsTable = (TableLayout) findViewById(R.id.contactsTable);
 		contactsTable.setStretchAllColumns(true);

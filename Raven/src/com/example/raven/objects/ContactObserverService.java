@@ -80,11 +80,6 @@ public class ContactObserverService extends Service
 	
 	public void PopulatePeopleList()
 	{
-		// editor = settings.edit();
-		// editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
-		// Constants.UPDATE_CONTACTS);
-		// editor.commit();
-		
 		mPeopleList.clear();
 		
 		Cursor people = getContentResolver().query(
@@ -152,10 +147,9 @@ public class ContactObserverService extends Service
 		}
 		people.close();
 		dal.addAllConacts(mPeopleList);
-		// editor = settings.edit();
-		// editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
-		// Constants.DONT_UPDATE_CONTACTS);
-		// editor.commit();
-		// settings.notifyAll();
+		editor = settings.edit();
+		editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+				Constants.UPDATE_CONTACTS);
+		editor.commit();
 	}
 }
