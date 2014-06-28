@@ -10,6 +10,7 @@ public class Constants implements BaseColumns
 	public static final String TABLE_CONTACTS = "CONTACTS";
 	public static final String TABLE_MESSAGES = "MESSAGES";
 	public static final String TABLE_COUNTRIES = "COUNTRIES";
+	public static final String TABLE_FLAGS = "FLAGS";
 	
 	public static final String COLUMN_CONTACT_ID = "CONTACT_ID";
 	public static final String COLUMN_CONTACT_NAME = "CONTACT_NAME";
@@ -27,12 +28,14 @@ public class Constants implements BaseColumns
 	public static final String COLUMN_MESSAGE_SENT = "MESSAGE_SENT";
 	public static final String COLUMN_MESSAGE_TIME = "MESSAGE_TIME";
 	
-	public static final String COLUMN_COUNTRY_NAME = "COUNTRY_NAME";
-	public static final String COLUMN_COUNTRY_LANGUAGE = "COUNTRY_LANGUAGE";
+	// public static final String COLUMN_COUNTRY_NAME = "COUNTRY_NAME";
+	// public static final String COLUMN_COUNTRY_LANGUAGE = "COUNTRY_LANGUAGE";
 	
-	public static final String SHARED_PROCESS_SETTINGS = "com.example.raven.process_settings";
-	public static final String SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS = "updateContacts";
-	public static final String SHARED_PROCESS_SETTINGS_SERVICE_INSTANCE = "serviceInstance";
+	public static final String COLUMN_FLAG_KEY = "FLAG_KEY";
+	public static final String COLUMN_FLAG_VALUE = "FLAG_VALUE";
+	
+	public static final String COLUMN_FLAG_SERVICE_INSTANCE = "SERVICE_INSTANCE";
+	public static final String COLUMN_FLAG_UPDATE_CONTACTS = "UPDATE_CONTACTS";
 	
 	public static final int RECEIVED = 1;
 	public static final int SENT_BY_ME = 0;

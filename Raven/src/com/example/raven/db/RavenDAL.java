@@ -58,10 +58,10 @@ public class RavenDAL
 	/*
 	 * Add country/language to countries table
 	 */
-	public void addCountry(String name, String language)
-	{
-		db.addCountry(name, language);
-	}
+	// public void addCountry(String name, String language)
+	// {
+	// db.addCountry(name, language);
+	// }
 	
 	/*
 	 * Get last message from a contact
@@ -87,27 +87,30 @@ public class RavenDAL
 		return db.getAllContacts();
 	}
 	
-	// /*
-	// * Add flag
-	// */
-	// public void addFlag(String flagKey, int flagValue)
-	// {
-	// db.addFlag(flagKey, flagValue);
-	// }
-	//
-	// /*
-	// * Update flag
-	// */
-	// public void updateFlag(String flagKey, int flagValue)
-	// {
-	// db.updateFlag(flagKey, flagValue);
-	// }
-	//
-	// /*
-	// * get falg
-	// */
-	// public int getFlagValue(String flagKey)
-	// {
-	// return db.getFlagValue(flagKey);
-	// }
+	/*
+	 * Add flag
+	 */
+	public void addFlag(String flagKey, int flagValue)
+	{
+		if(db.getFlagValue(flagKey) == -1)
+		{
+			db.addFlag(flagKey, flagValue);
+		}
+	}
+	
+	/*
+	 * Update flag
+	 */
+	public void updateFlag(String flagKey, int flagValue)
+	{
+		db.updateFlag(flagKey, flagValue);
+	}
+	
+	/*
+	 * get falg
+	 */
+	public int getFlagValue(String flagKey)
+	{
+		return db.getFlagValue(flagKey);
+	}
 }

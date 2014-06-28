@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -34,8 +32,7 @@ public class NewMessage extends Activity
 	private SimpleAdapter mAdapter;
 	private AutoCompleteTextView mTxtPhoneNo;
 	
-	private SharedPreferences settings;
-	private Editor editor;
+	private RavenDAL dal = HistoryActivity.dal;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -43,22 +40,17 @@ public class NewMessage extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_message);
 		
-		settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
-				MODE_MULTI_PROCESS);
-		
-		int updateContacts = settings.getInt(
-				Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
-				Constants.UPDATE_CONTACTS);
+		int updateContacts;
+		updateContacts = dal
+				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS);
 		
 		if(updateContacts == Constants.UPDATE_CONTACTS)
 		{
 			Toast.makeText(this, "Contact List Updating....",
 					Toast.LENGTH_LONG * 2).show();
-			HistoryActivity.mPeopleList = HistoryActivity.dal.getAllContacts();
-			editor = settings.edit();
-			editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+			HistoryActivity.mPeopleList = dal.getAllContacts();
+			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
 					Constants.DONT_UPDATE_CONTACTS);
-			editor.commit();
 		}
 		
 		mTxtPhoneNo = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);

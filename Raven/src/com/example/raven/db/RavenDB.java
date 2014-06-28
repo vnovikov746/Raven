@@ -55,14 +55,16 @@ public class RavenDB extends SQLiteOpenHelper
 																	// or sent
 		
 		// create countries table
-		db.execSQL("CREATE TABLE " + Constants.TABLE_COUNTRIES + "("
-				+ Constants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-				+ Constants.COLUMN_COUNTRY_NAME + " TEXT_TYPE, "
-				+ Constants.COLUMN_COUNTRY_LANGUAGE + " TEXT_TYPE);");
+		// db.execSQL("CREATE TABLE " + Constants.TABLE_COUNTRIES + "("
+		// + Constants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+		// + Constants.COLUMN_COUNTRY_NAME + " TEXT_TYPE, "
+		// + Constants.COLUMN_COUNTRY_LANGUAGE + " TEXT_TYPE);");
 		
-		// // create flags table
-		// db.execSQL("CREATE TABLE " + Constants.TABLE_RAVEN_FLAGS + "("
-		// + Constants.COLUMN_RAVEN_FLAGS_UPDATE_CONTACTS + " INTEGER);");
+		// create flags table
+		db.execSQL("CREATE TABLE " + Constants.TABLE_FLAGS + "("
+				+ Constants.COLUMN_FLAG_KEY + " TEXT_TYPE, "
+				+ Constants.COLUMN_FLAG_VALUE + " INTEGER);");
+		
 	}
 	
 	@Override
@@ -78,55 +80,57 @@ public class RavenDB extends SQLiteOpenHelper
 		onCreate(db);
 	}
 	
-	// /*
-	// * add flag
-	// */
-	// public void addFlag(String flagKey, int flagValue)
-	// {
-	// SQLiteDatabase db = this.getWritableDatabase();
-	//
-	// ContentValues values = new ContentValues();
-	// values.put(flagKey, flagValue);
-	// db.insert(Constants.TABLE_RAVEN_FLAGS, null, values);
-	// db.close();
-	// }
-	//
-	// /*
-	// * Update flag
-	// */
-	// public void updateFlag(String flagKey, int flagValue)
-	// {
-	// SQLiteDatabase db = this.getWritableDatabase();
-	//
-	// ContentValues values = new ContentValues();
-	// values.put(flagKey, flagValue);
-	// db.update(Constants.TABLE_RAVEN_FLAGS, values, null, null);
-	// db.close();
-	// }
-	//
-	// /*
-	// * get flag value
-	// */
-	// public int getFlagValue(String flagKey)
-	// {
-	// SQLiteDatabase db = this.getWritableDatabase();
-	//
-	// int flagVlue = -1;
-	//
-	// String selectQuery = "SELECT " + flagKey + " FROM "
-	// + Constants.TABLE_RAVEN_FLAGS + ";";
-	//
-	// Cursor c = db.rawQuery(selectQuery, null);
-	// int count = c.getCount();
-	// if(c.getCount() > 0)
-	// {
-	// c.moveToFirst();
-	// flagVlue = c.getInt(0);
-	// }
-	// c.close();
-	// db.close();
-	// return flagVlue;
-	// }
+	/*
+	 * add flag
+	 */
+	public void addFlag(String flagKey, int flagValue)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(Constants.COLUMN_FLAG_KEY, flagKey);
+		values.put(Constants.COLUMN_FLAG_VALUE, flagValue);
+		db.insert(Constants.TABLE_FLAGS, null, values);
+		db.close();
+	}
+	
+	/*
+	 * Update flag
+	 */
+	public void updateFlag(String flagKey, int flagValue)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(Constants.COLUMN_FLAG_KEY, flagKey);
+		values.put(Constants.COLUMN_FLAG_VALUE, flagValue);
+		db.update(Constants.TABLE_FLAGS, values, null, null);
+		db.close();
+	}
+	
+	/*
+	 * get flag value
+	 */
+	public int getFlagValue(String flagKey)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		int flagVlue = -1;
+		
+		String selectQuery = "SELECT " + Constants.COLUMN_FLAG_VALUE + " FROM "
+				+ Constants.TABLE_FLAGS + " WHERE " + Constants.COLUMN_FLAG_KEY
+				+ "='" + flagKey + "';";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		if(c.getCount() > 0)
+		{
+			c.moveToFirst();
+			flagVlue = c.getInt(0);
+		}
+		c.close();
+		db.close();
+		return flagVlue;
+	}
 	
 	/*
 	 * Add Contact to contacts table
@@ -175,17 +179,17 @@ public class RavenDB extends SQLiteOpenHelper
 	/*
 	 * Add country/language to countries table
 	 */
-	public void addCountry(String name, String language)
-	{
-		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();
-		values.put(Constants.COLUMN_COUNTRY_NAME, name);
-		values.put(Constants.COLUMN_COUNTRY_LANGUAGE, language);
-		
-		db.insert(Constants.TABLE_COUNTRIES, null, values);
-		db.close();
-	}
+	// public void addCountry(String name, String language)
+	// {
+	// SQLiteDatabase db = this.getWritableDatabase();
+	//
+	// ContentValues values = new ContentValues();
+	// values.put(Constants.COLUMN_COUNTRY_NAME, name);
+	// values.put(Constants.COLUMN_COUNTRY_LANGUAGE, language);
+	//
+	// db.insert(Constants.TABLE_COUNTRIES, null, values);
+	// db.close();
+	// }
 	
 	/*
 	 * Get last message from a contact

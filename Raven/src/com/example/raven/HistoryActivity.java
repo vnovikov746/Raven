@@ -9,14 +9,14 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -33,27 +33,26 @@ public class HistoryActivity extends Activity
 	public static RavenDAL dal;
 	public static ArrayList<Map<String, String>> mPeopleList;
 	
-	private SharedPreferences settings;
-	private Editor editor;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
 		
-		settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
-				MODE_MULTI_PROCESS);
-		
 		dal = new RavenDAL(this);
 		
-		int updateContacts = settings.getInt(
-				Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+		dal.addFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
 				Constants.UPDATE_CONTACTS);
-		
-		int createServiceInstance = settings.getInt(
-				Constants.SHARED_PROCESS_SETTINGS_SERVICE_INSTANCE,
+		dal.addFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
 				Constants.CREATE_SERVICE_INSTANCE);
+		
+		int updateContacts;
+		updateContacts = dal
+				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS);
+		
+		int createServiceInstance;
+		createServiceInstance = dal
+				.getFlagValue(Constants.COLUMN_FLAG_SERVICE_INSTANCE);
 		
 		if(createServiceInstance == Constants.CREATE_SERVICE_INSTANCE)
 		{
@@ -67,20 +66,9 @@ public class HistoryActivity extends Activity
 			Toast.makeText(this, "Contact List Updating....",
 					Toast.LENGTH_LONG * 2).show();
 			mPeopleList = dal.getAllContacts();
-			editor = settings.edit();
-			editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
 					Constants.DONT_UPDATE_CONTACTS);
-			editor.commit();
 		}
-		// mPeopleList = dal.getAllContacts();
-		// if(mPeopleList.isEmpty())
-		// {
-		// Toast.makeText(this, "Contact List Updating....",
-		// Toast.LENGTH_LONG * 2).show();
-		//
-		// Toast.makeText(this, "Enjoy", Toast.LENGTH_SHORT).show();
-		// mPeopleList = dal.getAllContacts();
-		// }
 		showHistory();
 	}
 	
@@ -115,12 +103,26 @@ public class HistoryActivity extends Activity
 		for(int i = 0; i < messages.size(); i++)
 		{
 			tr = new TableRow(this);
-			TextView tv1 = new TextView(this);
-			tv1.setText("" + messages.get(i).getContactPhoneNum() + " "
+			TextView tv = new TextView(this);
+			tv.setText("" + messages.get(i).getContactPhoneNum() + " "
 					+ messages.get(i).getMessageTime() + " "
 					+ messages.get(i).getMessageTxt());
+			tv.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					TableRow tr = (TableRow) v.getParent();
+					TextView items = (TextView) tr.getChildAt(0);
+					String phone = items.getText().toString().split(" ")[0];
+					Context context = getApplicationContext();
+					Intent intent = new Intent(context, NewMessage.class);
+					intent.putExtra("phoneNum", phone);
+					startActivity(intent);
+				}
+			});
 			
-			tr.addView(tv1);
+			tr.addView(tv);
 			
 			historyTable.addView(tr);
 		}
@@ -142,7 +144,6 @@ public class HistoryActivity extends Activity
 	
 	public void onUpdateClick(View v)
 	{
-		
 		ContentResolver contentResolver = getContentResolver();
 		Cursor cursor = contentResolver.query(Uri.parse("content://sms/inbox"),
 				null, null, null, null);

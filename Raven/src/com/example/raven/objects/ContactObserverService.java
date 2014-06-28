@@ -6,7 +6,6 @@ import java.util.Map;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Handler;
@@ -22,9 +21,6 @@ public class ContactObserverService extends Service
 	private ArrayList<Map<String, String>> mPeopleList;
 	private RavenDAL dal;
 	
-	private SharedPreferences settings;
-	private SharedPreferences.Editor editor;
-	
 	@Override
 	public IBinder onBind(Intent arg0)
 	{
@@ -36,15 +32,9 @@ public class ContactObserverService extends Service
 	{
 		super.onCreate();
 		
-		settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
-				MODE_MULTI_PROCESS);
-		
-		editor = settings.edit();
-		editor.putInt(Constants.SHARED_PROCESS_SETTINGS_SERVICE_INSTANCE,
-				Constants.DONT_CREATE_SERVICE_INSTANCE);
-		editor.commit();
-		
 		dal = new RavenDAL(this);
+		dal.updateFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
+				Constants.DONT_CREATE_SERVICE_INSTANCE);
 		
 		mPeopleList = new ArrayList<Map<String, String>>();
 		
@@ -147,9 +137,7 @@ public class ContactObserverService extends Service
 		}
 		people.close();
 		dal.addAllConacts(mPeopleList);
-		editor = settings.edit();
-		editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+		dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
 				Constants.UPDATE_CONTACTS);
-		editor.commit();
 	}
 }
