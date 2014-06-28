@@ -10,7 +10,7 @@ import com.example.raven.objects.Message;
 
 public class RavenDAL
 {
-	RavenDB db;
+	private RavenDB db;
 	
 	public RavenDAL(Context context)
 	{
@@ -86,4 +86,28 @@ public class RavenDAL
 	{
 		return db.getAllContacts();
 	}
+	
+	// /*
+	// * Add flag
+	// */
+	// public void addFlag(String flagKey, int flagValue)
+	// {
+	// db.addFlag(flagKey, flagValue);
+	// }
+	//
+	// /*
+	// * Update flag
+	// */
+	// public void updateFlag(String flagKey, int flagValue)
+	// {
+	// db.updateFlag(flagKey, flagValue);
+	// }
+	//
+	// /*
+	// * get falg
+	// */
+	// public int getFlagValue(String flagKey)
+	// {
+	// return db.getFlagValue(flagKey);
+	// }
 }

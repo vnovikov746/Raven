@@ -22,7 +22,8 @@
         android:theme="@style/AppTheme" >
         <service
             android:name="com.example.raven.objects.ContactObserverService"
-            android:exported="false">
+            android:exported="false"
+            android:process=":ravenServiceProcess">
         </service>
         <activity
             android:name="com.example.raven.HistoryActivity"

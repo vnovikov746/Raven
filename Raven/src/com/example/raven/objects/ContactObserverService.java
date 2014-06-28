@@ -14,11 +14,16 @@ import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 
+import com.example.raven.db.Constants;
+import com.example.raven.db.RavenDAL;
+
 public class ContactObserverService extends Service
 {
-	public static ArrayList<Map<String, String>> mPeopleList;
-	protected static SharedPreferences globalSettings;
-	protected static SharedPreferences.Editor editor;
+	private ArrayList<Map<String, String>> mPeopleList;
+	private RavenDAL dal;
+	
+	private SharedPreferences settings;
+	private SharedPreferences.Editor editor;
 	
 	@Override
 	public IBinder onBind(Intent arg0)
@@ -30,21 +35,20 @@ public class ContactObserverService extends Service
 	public void onCreate()
 	{
 		super.onCreate();
+		
+		settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+				MODE_MULTI_PROCESS);
+		
+		editor = settings.edit();
+		editor.putInt(Constants.SHARED_PROCESS_SETTINGS_SERVICE_INSTANCE,
+				Constants.DONT_CREATE_SERVICE_INSTANCE);
+		editor.commit();
+		
+		dal = new RavenDAL(this);
+		
 		mPeopleList = new ArrayList<Map<String, String>>();
 		
-		// globalSettings = getSharedPreferences("GlobalSettings",
-		// MODE_PRIVATE);
-		// String importContacts = globalSettings.getString("Import Contacts",
-		// "true");
-		// if(importContacts.trim().equals("true"))
-		// {
 		PopulatePeopleList();
-		// RavenDAL dal = new RavenDAL(this);
-		// dal.addAllConacts(mPeopleList);
-		// editor = globalSettings.edit();
-		// editor.putString("Import Contacts", "false");
-		// editor.commit();
-		// }
 		
 		this.getContentResolver().registerContentObserver(
 				ContactsContract.Contacts.CONTENT_URI, true, mObserver);
@@ -56,7 +60,7 @@ public class ContactObserverService extends Service
 		public void onChange(boolean selfChange)
 		{
 			super.onChange(selfChange);
-			
+			dal.deleteAllContacts();
 			PopulatePeopleList();
 		}
 	};
@@ -76,7 +80,13 @@ public class ContactObserverService extends Service
 	
 	public void PopulatePeopleList()
 	{
+		// editor = settings.edit();
+		// editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+		// Constants.UPDATE_CONTACTS);
+		// editor.commit();
+		
 		mPeopleList.clear();
+		
 		Cursor people = getContentResolver().query(
 				ContactsContract.Contacts.CONTENT_URI, null, null, null,
 				Phone.DISPLAY_NAME + " ASC");
@@ -87,6 +97,7 @@ public class ContactObserverService extends Service
 			
 			String contactId = people.getString(people
 					.getColumnIndex(ContactsContract.Contacts._ID));
+			
 			String hasPhone = people
 					.getString(people
 							.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
@@ -140,5 +151,11 @@ public class ContactObserverService extends Service
 			}
 		}
 		people.close();
+		dal.addAllConacts(mPeopleList);
+		// editor = settings.edit();
+		// editor.putInt(Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+		// Constants.DONT_UPDATE_CONTACTS);
+		// editor.commit();
+		// settings.notifyAll();
 	}
 }

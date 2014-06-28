@@ -18,7 +18,6 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.Toast;
 
 import com.example.raven.db.Constants;
-import com.example.raven.db.RavenDAL;
 import com.example.raven.objects.CountryCodeMap;
 
 public class Chat extends Activity
@@ -111,7 +110,6 @@ public class Chat extends Activity
 	{
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
-		RavenDAL dal = new RavenDAL(this);
 		
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		
@@ -121,8 +119,8 @@ public class Chat extends Activity
 			phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
 					+ phoneNumber.substring(1);
 		}
-		dal.addMessage(message, null, phoneNumber, Constants.SENT_BY_ME,
-				Constants.NOT_READ, Constants.NOT_SENT);
+		HistoryActivity.dal.addMessage(message, null, phoneNumber,
+				Constants.SENT_BY_ME, Constants.NOT_READ, Constants.NOT_SENT);
 		
 		PendingIntent sentPI = PendingIntent.getBroadcast(Chat.this, 0,
 				new Intent(SENT), 0);

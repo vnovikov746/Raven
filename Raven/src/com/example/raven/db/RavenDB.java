@@ -59,6 +59,10 @@ public class RavenDB extends SQLiteOpenHelper
 				+ Constants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ Constants.COLUMN_COUNTRY_NAME + " TEXT_TYPE, "
 				+ Constants.COLUMN_COUNTRY_LANGUAGE + " TEXT_TYPE);");
+		
+		// // create flags table
+		// db.execSQL("CREATE TABLE " + Constants.TABLE_RAVEN_FLAGS + "("
+		// + Constants.COLUMN_RAVEN_FLAGS_UPDATE_CONTACTS + " INTEGER);");
 	}
 	
 	@Override
@@ -68,10 +72,61 @@ public class RavenDB extends SQLiteOpenHelper
 		db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CONTACTS);
 		db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_MESSAGES);
 		db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_COUNTRIES);
+		// db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_RAVEN_FLAGS);
 		
 		// Create tables again
 		onCreate(db);
 	}
+	
+	// /*
+	// * add flag
+	// */
+	// public void addFlag(String flagKey, int flagValue)
+	// {
+	// SQLiteDatabase db = this.getWritableDatabase();
+	//
+	// ContentValues values = new ContentValues();
+	// values.put(flagKey, flagValue);
+	// db.insert(Constants.TABLE_RAVEN_FLAGS, null, values);
+	// db.close();
+	// }
+	//
+	// /*
+	// * Update flag
+	// */
+	// public void updateFlag(String flagKey, int flagValue)
+	// {
+	// SQLiteDatabase db = this.getWritableDatabase();
+	//
+	// ContentValues values = new ContentValues();
+	// values.put(flagKey, flagValue);
+	// db.update(Constants.TABLE_RAVEN_FLAGS, values, null, null);
+	// db.close();
+	// }
+	//
+	// /*
+	// * get flag value
+	// */
+	// public int getFlagValue(String flagKey)
+	// {
+	// SQLiteDatabase db = this.getWritableDatabase();
+	//
+	// int flagVlue = -1;
+	//
+	// String selectQuery = "SELECT " + flagKey + " FROM "
+	// + Constants.TABLE_RAVEN_FLAGS + ";";
+	//
+	// Cursor c = db.rawQuery(selectQuery, null);
+	// int count = c.getCount();
+	// if(c.getCount() > 0)
+	// {
+	// c.moveToFirst();
+	// flagVlue = c.getInt(0);
+	// }
+	// c.close();
+	// db.close();
+	// return flagVlue;
+	// }
 	
 	/*
 	 * Add Contact to contacts table

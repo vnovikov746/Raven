@@ -13,15 +13,46 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.example.raven.objects.ContactObserverService;
+import com.example.raven.db.RavenDAL;
 
 public class Contacts extends Activity
 {
+	// private SharedPreferences settings;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
+		
+		// if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		// {
+		// settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+		// 0 | MODE_MULTI_PROCESS);
+		// }
+		// else
+		// {
+		// settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+		// 0);
+		// }
+		
+		HistoryActivity.dal = new RavenDAL(this);
+		
+		// int updateContacts = settings.getInt(
+		// Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+		// Constants.UPDATE_CONTACTS);
+		// if(updateContacts == Constants.UPDATE_CONTACTS)
+		// {
+		// try
+		// {
+		// settings.wait();
+		// }
+		// catch(InterruptedException e)
+		// {
+		// e.printStackTrace();
+		// }
+		HistoryActivity.mPeopleList = HistoryActivity.dal.getAllContacts();
+		// }
 		
 		TableLayout contactsTable = (TableLayout) findViewById(R.id.contactsTable);
 		contactsTable.setStretchAllColumns(true);
@@ -32,9 +63,9 @@ public class Contacts extends Activity
 		TableRow tr = new TableRow(this);
 		contactsTable.addView(tr);
 		
-		for(int i = 0; i < ContactObserverService.mPeopleList.size(); i++)
+		for(int i = 0; i < HistoryActivity.mPeopleList.size(); i++)
 		{
-			Map<String, String> NamePhoneType = ContactObserverService.mPeopleList
+			Map<String, String> NamePhoneType = HistoryActivity.mPeopleList
 					.get(i);
 			
 			tr = new TableRow(this);

@@ -1,15 +1,19 @@
 package com.example.raven;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -25,18 +29,63 @@ import com.example.raven.objects.SmsReceiver;
 
 public class HistoryActivity extends Activity
 {
-	private RavenDAL dal;
+	public static RavenDAL dal;
+	public static ArrayList<Map<String, String>> mPeopleList;
+	
+	private SharedPreferences settings;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
-		Intent contactService = new Intent(this, ContactObserverService.class);
 		
-		startService(contactService);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+					0 | MODE_MULTI_PROCESS);
+		}
+		else
+		{
+			settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+					0);
+		}
 		
 		dal = new RavenDAL(this);
+		
+		// int updateContacts = settings.getInt(
+		// Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+		// Constants.UPDATE_CONTACTS);
+		
+		int createServiceInstance = settings.getInt(
+				Constants.SHARED_PROCESS_SETTINGS_SERVICE_INSTANCE,
+				Constants.CREATE_SERVICE_INSTANCE);
+		
+		if(createServiceInstance == Constants.CREATE_SERVICE_INSTANCE)
+		{
+			Intent contactService = new Intent(this,
+					ContactObserverService.class);
+			startService(contactService);
+		}
+		
+		// while(updateContacts == Constants.UPDATE_CONTACTS)
+		// {
+		// if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		// {
+		// settings = getSharedPreferences(
+		// Constants.SHARED_PROCESS_SETTINGS,
+		// 0 | MODE_MULTI_PROCESS);
+		// }
+		// else
+		// {
+		// settings = getSharedPreferences(
+		// Constants.SHARED_PROCESS_SETTINGS, 0);
+		// }
+		// updateContacts = settings.getInt(
+		// Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+		// Constants.UPDATE_CONTACTS);
+		// }
+		mPeopleList = dal.getAllContacts();
 		showHistory();
 	}
 	

@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
-import com.example.raven.objects.ContactObserverService;
 import com.example.raven.objects.CountryCodeMap;
 
 public class NewMessage extends Activity
@@ -33,11 +32,42 @@ public class NewMessage extends Activity
 	private SimpleAdapter mAdapter;
 	private AutoCompleteTextView mTxtPhoneNo;
 	
+	// private SharedPreferences settings;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_message);
+		
+		// if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		// {
+		// settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+		// 0 | MODE_MULTI_PROCESS);
+		// }
+		// else
+		// {
+		// settings = getSharedPreferences(Constants.SHARED_PROCESS_SETTINGS,
+		// 0);
+		// }
+		
+		HistoryActivity.dal = new RavenDAL(this);
+		
+		// int updateContacts = settings.getInt(
+		// Constants.SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS,
+		// Constants.UPDATE_CONTACTS);
+		// if(updateContacts == Constants.UPDATE_CONTACTS)
+		// {
+		// try
+		// {
+		// settings.wait();
+		// }
+		// catch(InterruptedException e)
+		// {
+		// e.printStackTrace();
+		// }
+		HistoryActivity.mPeopleList = HistoryActivity.dal.getAllContacts();
+		// }
 		
 		mTxtPhoneNo = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
@@ -53,13 +83,10 @@ public class NewMessage extends Activity
 						.getItemAtPosition(index);
 				String number = map.get("Phone");
 				mTxtPhoneNo.setText("" + number);
-				// InputMethodManager imm = (InputMethodManager)
-				// getSystemService(Context.INPUT_METHOD_SERVICE);
-				// imm.hideSoftInputFromWindow(mTxtPhoneNo.getWindowToken(), 0);
 			}
 		});
 		
-		mAdapter = new SimpleAdapter(this, ContactObserverService.mPeopleList,
+		mAdapter = new SimpleAdapter(this, HistoryActivity.mPeopleList,
 				R.layout.custcontview,
 				new String[] { "Name", "Phone", "Type" }, new int[] {
 						R.id.ccontName, R.id.ccontNo, R.id.ccontType });

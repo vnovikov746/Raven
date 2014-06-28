@@ -30,10 +30,18 @@ public class Constants implements BaseColumns
 	public static final String COLUMN_COUNTRY_NAME = "COUNTRY_NAME";
 	public static final String COLUMN_COUNTRY_LANGUAGE = "COUNTRY_LANGUAGE";
 	
-	public static final int SENT_BY_ME = 0;
+	public static final String SHARED_PROCESS_SETTINGS = "com.example.raven.process_settings";
+	public static final String SHARED_PROCESS_SETTINGS_UPDATE_CONTACTS = "updateContacts";
+	public static final String SHARED_PROCESS_SETTINGS_SERVICE_INSTANCE = "serviceInstance";
+	
 	public static final int RECEIVED = 1;
-	public static final int NOT_READ = 0;
+	public static final int SENT_BY_ME = 0;
 	public static final int READ = 1;
-	public static final int NOT_SENT = 0;
+	public static final int NOT_READ = 0;
 	public static final int SENT = 1;
+	public static final int NOT_SENT = 0;
+	public static final int UPDATE_CONTACTS = 1;
+	public static final int DONT_UPDATE_CONTACTS = 0;
+	public static final int CREATE_SERVICE_INSTANCE = 1;
+	public static final int DONT_CREATE_SERVICE_INSTANCE = 0;
 }
