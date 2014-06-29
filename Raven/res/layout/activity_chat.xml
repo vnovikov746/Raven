@@ -38,4 +38,26 @@
 		android:onClick="onSendClick"
         android:text="@string/sendBtn" />
 
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/SendBtn2"
+        android:layout_alignLeft="@+id/SmsTxt2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+        <TableLayout
+            android:id="@+id/chatTable"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/chatTableRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
 </RelativeLayout>

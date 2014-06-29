@@ -1,5 +1,6 @@
 package com.example.raven;
 
+import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -14,11 +15,16 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.objects.CountryCodeMap;
+import com.example.raven.objects.Message;
 
 public class Chat extends Activity
 {
@@ -34,7 +40,7 @@ public class Chat extends Activity
 		phoneNo = intent.getStringExtra("phoneNum");
 		if(phoneNo != null)
 		{
-			populateMessages();
+			populateMessages(phoneNo);
 		}
 	}
 	
@@ -46,9 +52,35 @@ public class Chat extends Activity
 		return true;
 	}
 	
-	public void populateMessages()
+	public void populateMessages(String phoneNo)
 	{	
+		ArrayList<Message> messages = HistoryActivity.dal.getChatWithContact(phoneNo);
 		
+		TableLayout chatTable = (TableLayout) findViewById(R.id.chatTable);
+		chatTable.setStretchAllColumns(true);
+		chatTable.bringToFront();
+		
+		chatTable.removeAllViews();
+		
+		TableRow tr = new TableRow(this);
+		
+		for(int i = 0; i < messages.size(); i++)
+		{
+			tr = new TableRow(this);
+			TextView tv = new TextView(this);
+			tv.setText("" + messages.get(i).getMessageTxt());
+			tv.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+
+				}
+			});
+			
+			tr.addView(tv);
+			chatTable.addView(tr);
+		}
 	}
 	
 	public void onSendClick(View v)
@@ -137,7 +169,7 @@ public class Chat extends Activity
 			{
 				switch(getResultCode())
 				{
-					case Activity.RESULT_OK:
+					case Activity.RESULT_OK:						
 						Toast.makeText(Chat.this, "SMS sent",
 								Toast.LENGTH_SHORT).show();
 						break;
@@ -184,9 +216,11 @@ public class Chat extends Activity
 		
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-		
-		Intent intent = new Intent(this, Chat.class);
-		intent.putExtra("phoneNum", phoneNumber);
-		startActivity(intent);
+		TableLayout chatTable = (TableLayout) findViewById(R.id.chatTable);
+		TableRow tr = new TableRow(this);
+		TextView tv = new TextView(this);
+		tv.setText("" + message);
+		tr.addView(tv);
+		chatTable.addView(tr);
 	}
 }

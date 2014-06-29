@@ -176,6 +176,36 @@ public class RavenDB extends SQLiteOpenHelper
 		db.close();
 	}
 	
+	public ArrayList<Message> getChatWithContact(String contactPhone)
+	{
+		ArrayList<Message> messages = new ArrayList<Message>();
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		String selectQuery = "SELECT " + Constants.COLUMN_MESSAGE_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TIME + ","
+				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT + ","
+				+ Constants.COLUMN_MESSAGE_READ + ","
+				+ Constants.COLUMN_MESSAGE_SENT + " FROM "
+				+ Constants.TABLE_MESSAGES + " WHERE "
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + "='" + contactPhone
+				+ "';";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		if(c.moveToFirst())
+		{
+			do
+			{
+				messages.add(new Message(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4), c.getInt(5), c.getInt(6)));
+			}
+			while(c.moveToNext());
+		}
+		c.close();
+		db.close();
+		
+		return messages;		
+	}
+	
 	/*
 	 * Add country/language to countries table
 	 */

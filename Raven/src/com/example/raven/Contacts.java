@@ -47,7 +47,6 @@ public class Contacts extends Activity
 		contactsTable.removeAllViews();
 		
 		TableRow tr = new TableRow(this);
-		contactsTable.addView(tr);
 		
 		for(int i = 0; i < HistoryActivity.mPeopleList.size(); i++)
 		{

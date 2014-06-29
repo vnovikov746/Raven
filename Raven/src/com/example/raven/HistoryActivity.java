@@ -99,7 +99,6 @@ public class HistoryActivity extends Activity
 		historyTable.removeAllViews();
 		
 		TableRow tr = new TableRow(this);
-		historyTable.addView(tr);
 		
 		if(messages.size() == 0)
 		{
@@ -153,7 +152,7 @@ public class HistoryActivity extends Activity
 	
 	public void onSendNew(View v)
 	{
-		Translator t = new Raven().SetService(Raven.YANDEX);
+		Translator t = Raven.SetService(Raven.YANDEX);
 //		String text = t.translate("en-he", "text");
 //		Map<String, String> m = t.getLangs();
 		String text = t.detect("hello");

@@ -39,6 +39,14 @@ public class RavenDAL
 	}
 	
 	/*
+	 * get all the messages related to contact
+	 */
+	public ArrayList<Message> getChatWithContact(String contactPhone)
+	{
+		return db.getChatWithContact(contactPhone);
+	}
+	
+	/*
 	 * Delete all Contacts
 	 */
 	public void deleteAllContacts()
