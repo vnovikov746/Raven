@@ -26,6 +26,7 @@ import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
 import com.example.raven.dict.Translator;
 import com.example.raven.objects.ContactObserverService;
+import com.example.raven.objects.ContactList;
 import com.example.raven.objects.Message;
 import com.example.raven.objects.Raven;
 import com.example.raven.objects.SmsReceiver;
@@ -33,15 +34,13 @@ import com.example.raven.objects.SmsReceiver;
 public class HistoryActivity extends Activity
 {
 	public static RavenDAL dal;
-	public static ArrayList<Map<String, String>> mPeopleList;
 	
 	//menu
-	private int groupId = 1;
-	int NewMessageId = Menu.FIRST;
-	int GlobalSettingsId = Menu.FIRST +1;
-	int AboutId = Menu.FIRST +2;
+	private final int groupId = 1;
+	private final int NewMessageId = Menu.FIRST;
+	private final int GlobalSettingsId = Menu.FIRST +1;
+	private final int AboutId = Menu.FIRST +2;
 
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -50,34 +49,30 @@ public class HistoryActivity extends Activity
 		
 		dal = new RavenDAL(this);
 		
-		dal.addFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
-				Constants.UPDATE_CONTACTS);
 		dal.addFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
 				Constants.CREATE_SERVICE_INSTANCE);
-		
-		int updateContacts;
-		updateContacts = dal
-				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS);
-		
+
 		int createServiceInstance;
 		createServiceInstance = dal
 				.getFlagValue(Constants.COLUMN_FLAG_SERVICE_INSTANCE);
 		
 		if(createServiceInstance == Constants.CREATE_SERVICE_INSTANCE)
 		{
+			dal.addFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,-1);
 			Intent contactService = new Intent(this,
 					ContactObserverService.class);
 			startService(contactService);
 		}
+		ContactList.updateList(this);			
 		
-		if(updateContacts == Constants.UPDATE_CONTACTS)
-		{
-			Toast.makeText(this, "Contact List Updating....",
-					Toast.LENGTH_LONG * 2).show();
-			mPeopleList = dal.getAllContacts();
-			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
-					Constants.DONT_UPDATE_CONTACTS);
-		}
+//		if(updateContacts == Constants.UPDATE_CONTACTS)
+//		{
+//			Toast.makeText(this, "Contact List Updating....",
+//					Toast.LENGTH_LONG * 2).show();
+//			mPeopleList = dal.getAllContacts();
+//			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
+//					Constants.DONT_UPDATE_CONTACTS);
+//		}
 		showHistory();
 	}
 	
@@ -124,7 +119,7 @@ public class HistoryActivity extends Activity
 					TextView items = (TextView) tr.getChildAt(0);
 					String phone = items.getText().toString().split(" ")[0];
 					Context context = getApplicationContext();
-					Intent intent = new Intent(context, NewMessage.class);
+					Intent intent = new Intent(context, Chat.class);
 					intent.putExtra("phoneNum", phone);
 					startActivity(intent);
 				}
@@ -152,16 +147,16 @@ public class HistoryActivity extends Activity
 	
 	public void onSendNew(View v)
 	{
-		Translator t = Raven.SetService(Raven.YANDEX);
+//		Translator t = Raven.SetService(Raven.YANDEX);
 //		String text = t.translate("en-he", "text");
 //		Map<String, String> m = t.getLangs();
-		String text = t.detect("hello");
+//		String text = t.detect("hello");
 		
 		// Display SMS message
-		Toast.makeText(this, "RAVEN: " + text , Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "RAVEN: " + text , Toast.LENGTH_SHORT).show();
 		
-//		Intent intent = new Intent(this, NewMessage.class);
-//		startActivity(intent);
+		Intent intent = new Intent(this, NewMessage.class);
+		startActivity(intent);
 	}
 	
 	public void onUpdateClick(View v)

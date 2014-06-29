@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.ContactList;
 import com.example.raven.objects.CountryCodeMap;
 
 public class NewMessage extends Activity
@@ -40,18 +41,20 @@ public class NewMessage extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_message);
 		
-		int updateContacts;
-		updateContacts = dal
-				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS);
+//		int updateContacts;
+//		updateContacts = dal
+//				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS);
+//		
+//		if(updateContacts == Constants.UPDATE_CONTACTS)
+//		{
+//			Toast.makeText(this, "Contact List Updating....",
+//					Toast.LENGTH_LONG * 2).show();
+//			ContactsListService.mPeopleList = dal.getAllContacts();
+//			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
+//					Constants.DONT_UPDATE_CONTACTS);
+//		}
 		
-		if(updateContacts == Constants.UPDATE_CONTACTS)
-		{
-			Toast.makeText(this, "Contact List Updating....",
-					Toast.LENGTH_LONG * 2).show();
-			HistoryActivity.mPeopleList = dal.getAllContacts();
-			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
-					Constants.DONT_UPDATE_CONTACTS);
-		}
+		ContactList.updateList(this);			
 		
 		mTxtPhoneNo = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
@@ -70,7 +73,7 @@ public class NewMessage extends Activity
 			}
 		});
 		
-		mAdapter = new SimpleAdapter(this, HistoryActivity.mPeopleList,
+		mAdapter = new SimpleAdapter(this, ContactList.mPeopleList,
 				R.layout.custcontview,
 				new String[] { "Name", "Phone", "Type" }, new int[] {
 						R.id.ccontName, R.id.ccontNo, R.id.ccontType });
@@ -81,6 +84,10 @@ public class NewMessage extends Activity
 	@Override
 	public void onResume()
 	{
+		if(HistoryActivity.dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
+		{
+			ContactList.updateList(this);			
+		}
 		super.onResume();
 		Intent intent = getIntent();
 		try
@@ -106,7 +113,15 @@ public class NewMessage extends Activity
 	public void onSendClick(View v)
 	{
 		String phoneNo = mTxtPhoneNo.getText().toString().trim();
-		
+
+		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		String countryCode = tm.getSimCountryIso();
+		if(phoneNo.startsWith("0"))
+		{
+			phoneNo = CountryCodeMap.COUNTRIES.get(countryCode)
+					+ phoneNo.substring(1);
+		}
+
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String message = smsTxt.getText().toString().trim();
 		
@@ -130,7 +145,15 @@ public class NewMessage extends Activity
 					break;
 				case TelephonyManager.SIM_STATE_READY:
 					// do something
-					sendSMS(phoneNo, message); // method to send message
+					if(!HistoryActivity.dal.isContactExist(phoneNo))
+					{
+						HistoryActivity.dal.addContact("", phoneNo, "temp", "", 0);
+					}
+					sendSMS(phoneNo, message); // method to send message					
+
+					Intent intent = new Intent(this, Chat.class);
+					intent.putExtra("phoneNum", phoneNo);
+					startActivity(intent);
 					break;
 				case TelephonyManager.SIM_STATE_UNKNOWN:
 					// do something
@@ -174,6 +197,7 @@ public class NewMessage extends Activity
 			phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
 					+ phoneNumber.substring(1);
 		}
+		
 		dal.addMessage(message, null, phoneNumber, Constants.SENT_BY_ME,
 				Constants.NOT_READ, Constants.NOT_SENT);
 		
@@ -239,10 +263,6 @@ public class NewMessage extends Activity
 		
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-		
-		Intent intent = new Intent(this, Chat.class);
-		intent.putExtra("phoneNum", phoneNumber);
-		startActivity(intent);
 	}
 	
 	public void onContactsClick(View v)

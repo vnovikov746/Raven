@@ -1,6 +1,7 @@
 package com.example.raven;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raven.db.Constants;
+import com.example.raven.objects.ContactList;
 import com.example.raven.objects.CountryCodeMap;
 import com.example.raven.objects.Message;
 
@@ -36,12 +38,24 @@ public class Chat extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		
+		ContactList.updateList(this);			
+		
 		Intent intent = getIntent();
 		phoneNo = intent.getStringExtra("phoneNum");
 		if(phoneNo != null)
 		{
 			populateMessages(phoneNo);
 		}
+	}
+	
+	@Override
+	public void onResume()
+	{
+		if(HistoryActivity.dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
+		{
+			ContactList.updateList(this);			
+		}
+		super.onResume();
 	}
 	
 	@Override
@@ -109,6 +123,12 @@ public class Chat extends Activity
 				case TelephonyManager.SIM_STATE_READY:
 					// do something
 					sendSMS(phoneNo, message); // method to send message
+					TableLayout chatTable = (TableLayout) findViewById(R.id.chatTable);
+					TableRow tr = new TableRow(this);
+					TextView tv = new TextView(this);
+					tv.setText("" + message);
+					tr.addView(tv);
+					chatTable.addView(tr);
 					break;
 				case TelephonyManager.SIM_STATE_UNKNOWN:
 					// do something
@@ -151,6 +171,7 @@ public class Chat extends Activity
 			phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
 					+ phoneNumber.substring(1);
 		}
+	
 		HistoryActivity.dal.addMessage(message, null, phoneNumber,
 				Constants.SENT_BY_ME, Constants.NOT_READ, Constants.NOT_SENT);
 		
@@ -216,11 +237,5 @@ public class Chat extends Activity
 		
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-		TableLayout chatTable = (TableLayout) findViewById(R.id.chatTable);
-		TableRow tr = new TableRow(this);
-		TextView tv = new TextView(this);
-		tv.setText("" + message);
-		tr.addView(tv);
-		chatTable.addView(tr);
 	}
 }

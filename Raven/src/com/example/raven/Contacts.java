@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.ContactList;
 
 public class Contacts extends Activity
 {
@@ -27,18 +28,18 @@ public class Contacts extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
 		
-		int updateContacts;
-		updateContacts = dal
-				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS);
-		
-		if(updateContacts == Constants.UPDATE_CONTACTS)
-		{
-			Toast.makeText(this, "Contact List Updating....",
-					Toast.LENGTH_LONG * 2).show();
-			HistoryActivity.mPeopleList = dal.getAllContacts();
-			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
-					Constants.DONT_UPDATE_CONTACTS);
-		}
+//		int updateContacts;
+//		updateContacts = dal
+//				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS);
+//		
+//		if(updateContacts == Constants.UPDATE_CONTACTS)
+//		{
+//			Toast.makeText(this, "Contact List Updating....",
+//					Toast.LENGTH_LONG * 2).show();
+//			ContactsListService.mPeopleList = dal.getAllContacts();
+//			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
+//					Constants.DONT_UPDATE_CONTACTS);
+//		}
 		
 		TableLayout contactsTable = (TableLayout) findViewById(R.id.contactsTable);
 		contactsTable.setStretchAllColumns(true);
@@ -48,9 +49,9 @@ public class Contacts extends Activity
 		
 		TableRow tr = new TableRow(this);
 		
-		for(int i = 0; i < HistoryActivity.mPeopleList.size(); i++)
+		for(int i = 0; i < ContactList.mPeopleList.size(); i++)
 		{
-			Map<String, String> NamePhoneType = HistoryActivity.mPeopleList
+			Map<String, String> NamePhoneType = ContactList.mPeopleList
 					.get(i);
 			
 			tr = new TableRow(this);

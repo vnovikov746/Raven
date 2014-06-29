@@ -152,6 +152,25 @@ public class RavenDB extends SQLiteOpenHelper
 	}
 	
 	/*
+	 * check if contact exist in the db
+	 */
+	public boolean isContactExist(String contactPhone)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String selectQuery = "SELECT * FROM "
+				+ Constants.TABLE_CONTACTS + " WHERE "
+				+ Constants.COLUMN_CONTACT_PHONE_NUM + "='" + contactPhone
+				+ "';";
+		Cursor c = db.rawQuery(selectQuery, null);
+		if(c.getCount() > 0)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	/*
 	 * Add message to messages table
 	 */
 	public void addMessage(String txt, String transTxt, String contactPhone,
@@ -196,7 +215,7 @@ public class RavenDB extends SQLiteOpenHelper
 		{
 			do
 			{
-				messages.add(new Message(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4), c.getInt(5), c.getInt(6)));
+				messages.add(new Message(c.getString(0), c.getString(1), c.getString(2), contactPhone, c.getInt(3), c.getInt(4), c.getInt(5)));
 			}
 			while(c.moveToNext());
 		}

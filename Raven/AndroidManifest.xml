@@ -28,6 +28,10 @@
             android:exported="false"
             android:process=":ravenServiceProcess">
         </service>
+        <service
+            android:name="com.example.raven.objects.ContactList"
+            android:exported="false">
+        </service>
         <activity
             android:name="com.example.raven.HistoryActivity"
             android:label="@string/app_name" >
