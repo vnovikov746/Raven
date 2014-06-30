@@ -24,10 +24,8 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
-import com.example.raven.dict.Translator;
 import com.example.raven.objects.ContactObserverService;
 import com.example.raven.objects.Message;
-import com.example.raven.objects.Raven;
 import com.example.raven.objects.SmsReceiver;
 
 public class HistoryActivity extends Activity
@@ -35,12 +33,11 @@ public class HistoryActivity extends Activity
 	public static RavenDAL dal;
 	public static ArrayList<Map<String, String>> mPeopleList;
 	
-	//menu
+	// menu
 	private int groupId = 1;
 	int NewMessageId = Menu.FIRST;
-	int GlobalSettingsId = Menu.FIRST +1;
-	int AboutId = Menu.FIRST +2;
-
+	int GlobalSettingsId = Menu.FIRST + 1;
+	int AboutId = Menu.FIRST + 2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -137,31 +134,35 @@ public class HistoryActivity extends Activity
 	}
 	
 	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		
 		Intent NewMessageIntent = new Intent(this, NewMessage.class);
-		menu.add(groupId, NewMessageId, NewMessageId, "New message").setIntent(NewMessageIntent);
+		menu.add(groupId, NewMessageId, NewMessageId, "New message").setIntent(
+				NewMessageIntent);
 		
 		Intent GlobalSettingsIntent = new Intent(this, GlobalSettings.class);
-		menu.add(groupId, GlobalSettingsId, GlobalSettingsId, "Preferences").setIntent(GlobalSettingsIntent);
+		menu.add(groupId, GlobalSettingsId, GlobalSettingsId, "Preferences")
+				.setIntent(GlobalSettingsIntent);
 		
-		menu.add(groupId, AboutId, AboutId, "About").setIntent(GlobalSettingsIntent);
-
-		return super.onCreateOptionsMenu(menu); 
-    }
+		menu.add(groupId, AboutId, AboutId, "About").setIntent(
+				GlobalSettingsIntent);
+		
+		return super.onCreateOptionsMenu(menu);
+	}
 	
 	public void onSendNew(View v)
 	{
-		Translator t = Raven.SetService(Raven.YANDEX);
-//		String text = t.translate("en-he", "text");
-//		Map<String, String> m = t.getLangs();
-		String text = t.detect("hello");
+		// Translator t = Raven.SetService(Raven.YANDEX);
+		// String text = t.translate("en-he", "text");
+		// Map<String, String> m = t.getLangs();
+		// String text = t.detect("hello");
 		
 		// Display SMS message
-		Toast.makeText(this, "RAVEN: " + text , Toast.LENGTH_SHORT).show();
+		// Toast.makeText(this, "RAVEN: " + text , Toast.LENGTH_SHORT).show();
 		
-//		Intent intent = new Intent(this, NewMessage.class);
-//		startActivity(intent);
+		Intent intent = new Intent(this, NewMessage.class);
+		startActivity(intent);
 	}
 	
 	public void onUpdateClick(View v)
