@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.example.raven.objects.Message;
 
@@ -38,6 +40,15 @@ public class RavenDAL
 		}
 	}
 	
+	
+	/*
+	 * check if contact exist in the db
+	 */
+	public boolean isContactExist(String contactPhone)
+	{
+		return db.isContactExist(contactPhone);
+	}
+
 	/*
 	 * get all the messages related to contact
 	 */

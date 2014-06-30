@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -12,6 +13,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
@@ -31,7 +34,7 @@ public class ContactObserverService extends Service
 	public void onCreate()
 	{
 		super.onCreate();
-		
+
 		dal = new RavenDAL(this);
 		dal.updateFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
 				Constants.DONT_CREATE_SERVICE_INSTANCE);
@@ -39,7 +42,7 @@ public class ContactObserverService extends Service
 		mPeopleList = new ArrayList<Map<String, String>>();
 		
 		PopulatePeopleList();
-		
+	
 		this.getContentResolver().registerContentObserver(
 				ContactsContract.Contacts.CONTENT_URI, true, mObserver);
 	}
@@ -50,7 +53,6 @@ public class ContactObserverService extends Service
 		public void onChange(boolean selfChange)
 		{
 			super.onChange(selfChange);
-			dal.deleteAllContacts();
 			PopulatePeopleList();
 		}
 	};
@@ -110,6 +112,16 @@ public class ContactObserverService extends Service
 					Map<String, String> NamePhoneType = new HashMap<String, String>();
 					
 					NamePhoneType.put("Name", contactName);
+					
+					TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+					
+					String countryCode = tm.getSimCountryIso();
+					if(phoneNumber.startsWith("0"))
+					{
+						phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
+								+ phoneNumber.substring(1);
+					}
+
 					NamePhoneType.put("Phone", phoneNumber);
 					
 					if(numberType.equals("0"))
@@ -136,8 +148,11 @@ public class ContactObserverService extends Service
 			}
 		}
 		people.close();
+		dal.deleteAllContacts();
 		dal.addAllConacts(mPeopleList);
 		dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
 				Constants.UPDATE_CONTACTS);
+		Toast.makeText(this, "Contacts Added to DB",
+		Toast.LENGTH_SHORT).show();
 	}
 }
