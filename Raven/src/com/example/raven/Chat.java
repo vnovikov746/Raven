@@ -1,7 +1,5 @@
 package com.example.raven;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 import com.example.raven.adapters.ChatCursorAdapter;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
-import com.example.raven.objects.ContactList;
 import com.example.raven.objects.CountryCodeMap;
 
 public class Chat extends Activity
@@ -32,6 +29,7 @@ public class Chat extends Activity
 	private RavenDAL dal = HistoryActivity.dal;
 	private String phoneNo;
 	private ListView list;
+	private ChatCursorAdapter mca;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -39,10 +37,12 @@ public class Chat extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		
-		HistoryActivity.currentActivity = "Chat";
-		
-		ContactList.updateList(this);
-		
+		if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
+		{
+			Cursor c = dal.getAllContactsCursor();
+			mca.changeCursor(c);
+		}
+
 		Intent intent = getIntent();
 		phoneNo = intent.getStringExtra("phoneNum");
 		if(phoneNo != null)
@@ -54,12 +54,6 @@ public class Chat extends Activity
 	@Override
 	public void onResume()
 	{
-		HistoryActivity.currentActivity = "Chat";
-		if(dal
-				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
-		{
-			ContactList.updateList(this);
-		}
 		super.onResume();
 	}
 	
@@ -75,7 +69,7 @@ public class Chat extends Activity
 	{
 		list = (ListView)findViewById(R.id.chatList);
 		Cursor c = dal.getChatWithContactCursor(phoneNo);
-		ChatCursorAdapter mca = new ChatCursorAdapter(this,c);
+		mca = new ChatCursorAdapter(this,c);
 		list.setAdapter(mca);
 	}
 	
@@ -150,6 +144,8 @@ public class Chat extends Activity
 		
 		dal.addMessage(message, null, phoneNumber,
 				Constants.SENT_BY_ME, Constants.NOT_READ, Constants.NOT_SENT);
+		Cursor c = dal.getChatWithContactCursor(phoneNo);
+		mca.changeCursor(c);
 		
 		PendingIntent sentPI = PendingIntent.getBroadcast(Chat.this, 0,
 				new Intent(SENT), 0);

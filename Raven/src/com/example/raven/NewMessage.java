@@ -1,7 +1,5 @@
 package com.example.raven;
 
-import java.util.Map;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -10,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -20,62 +19,60 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.example.raven.adapters.NewMessageAdapter;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
-import com.example.raven.objects.ContactList;
 import com.example.raven.objects.CountryCodeMap;
 
 public class NewMessage extends Activity
 {
-	private SimpleAdapter mAdapter;
 	private AutoCompleteTextView mTxtPhoneNo;
 	
 	private RavenDAL dal = HistoryActivity.dal;
+	private NewMessageAdapter mca;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_message);
-		
-		ContactList.updateList(this);			
-		
+				
 		mTxtPhoneNo = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		smsTxt.clearFocus();
+		
 		mTxtPhoneNo.setOnItemClickListener(new OnItemClickListener()
 		{
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onItemClick(AdapterView<?> av, View arg1, int index,
 					long arg3)
 			{
-				Map<String, String> map = (Map<String, String>) av
-						.getItemAtPosition(index);
-				String number = map.get("Phone");
-				mTxtPhoneNo.setText("" + number);
+				Cursor c = (Cursor)av.getItemAtPosition(index);
+				mTxtPhoneNo.setText("" + c.getString(2));
 			}
 		});
 		
-		mAdapter = new SimpleAdapter(this, ContactList.mPeopleList,
-				R.layout.custcontview,
-				new String[] { "Name", "Phone", "Type" }, new int[] {
-						R.id.ccontName, R.id.ccontNo, R.id.ccontType });
-		
-		mTxtPhoneNo.setAdapter(mAdapter);
+		Cursor c = dal.getAllContactsCursor();
+		mca = new NewMessageAdapter(this,c);
+		mTxtPhoneNo.setAdapter(mca);
+		if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
+		{
+			c = dal.getAllContactsCursor();
+			mca.changeCursor(c);
+		}
 	}
 	
 	@Override
 	public void onResume()
 	{
+		super.onResume();
 		if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
 		{
-			ContactList.updateList(this);			
+			Cursor c = dal.getAllContactsCursor();
+			mca.changeCursor(c);
 		}
-		super.onResume();
 		Intent intent = getIntent();
 		try
 		{

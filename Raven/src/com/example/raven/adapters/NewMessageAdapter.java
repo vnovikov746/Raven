@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.example.raven.R;
 
-public class ChatCursorAdapter extends CursorAdapter
+public class NewMessageAdapter extends CursorAdapter
 {
 	private LayoutInflater inflater;
 	
-	public ChatCursorAdapter(Context context, Cursor c)
+	public NewMessageAdapter(Context context, Cursor c)
 	{
 		super(context,c);
 		inflater = LayoutInflater.from(context);
@@ -23,21 +23,22 @@ public class ChatCursorAdapter extends CursorAdapter
 	@Override
 	public void bindView(View view, Context context, Cursor c)
 	{
-		// c.getString(1) = txt
-		// c.getString(2) = translated txt
-		// c.getString(3) = time
-		// c.getInt(4) = receivrd or sent
-		// c.getInt(5) = read or not
-		// c.getInt(6) = sent or not
+		// c.getString(1) = name
+		// c.getString(2) = phone
+		// c.getString(3) = type
 		
-		TextView txt = (TextView)view.findViewById(R.id.chatMessage);
-
-		txt.setText(c.getString(1));
+		TextView name = (TextView)view.findViewById(R.id.ccontName);
+		TextView phone = (TextView)view.findViewById(R.id.ccontNo);
+		TextView type = (TextView)view.findViewById(R.id.ccontType);
+		
+		name.setText(c.getString(1));
+		phone.setText(c.getString(2));
+		type.setText(c.getString(3));
 	}
 	
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent)
 	{
-		return inflater.inflate(R.layout.chat_message, parent, false);
+		return inflater.inflate(R.layout.custcont_view, parent, false);
 	}
 }

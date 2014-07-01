@@ -9,7 +9,6 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.example.raven.R;
-import com.example.raven.db.Constants;
 
 public class ContactsCursorAdapter extends CursorAdapter
 {

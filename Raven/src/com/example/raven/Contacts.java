@@ -12,7 +12,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.example.raven.adapters.ContactsCursorAdapter;
 import com.example.raven.db.RavenDAL;
-import com.example.raven.objects.ContactList;
 
 public class Contacts extends Activity implements OnItemClickListener
 {
@@ -24,8 +23,6 @@ public class Contacts extends Activity implements OnItemClickListener
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
-		
-		ContactList.updateList(this);
 		
 		list = (ListView)findViewById(R.id.contactList);
 		Cursor c = dal.getAllContactsCursor();

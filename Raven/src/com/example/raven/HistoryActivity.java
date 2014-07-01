@@ -15,14 +15,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.example.raven.adapters.HistoryCursorAdapter;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
-import com.example.raven.objects.ContactList;
 import com.example.raven.objects.SmsReceiver;
 import com.example.raven.services.ContactObserverService;
 
 public class HistoryActivity extends Activity implements OnItemClickListener
 {
 	public static RavenDAL dal;
-	public static String currentActivity;
 	
 	// menu
 	private final int groupId = 1;
@@ -38,12 +36,11 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);		
 		
-		currentActivity = "History";
-		
 		dal = new RavenDAL(this);
 		
 		dal.addFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
 				Constants.CREATE_SERVICE_INSTANCE);
+		dal.addFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS, Constants.DONT_UPDATE_CONTACTS);
 		
 		int createServiceInstance;
 		createServiceInstance = dal
@@ -56,7 +53,6 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 					ContactObserverService.class);
 			startService(contactService);
 		}
-		ContactList.updateList(this);
 		
 		showHistory();
 	}
@@ -74,8 +70,6 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 	@Override
 	public void onResume()
 	{
-		ContactList.updateList(this);
-		currentActivity = "History";
 		super.onResume();
 		showHistory();
 	}

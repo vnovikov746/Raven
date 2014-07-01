@@ -6,7 +6,6 @@ import java.util.Map;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.example.raven.objects.Message;
 

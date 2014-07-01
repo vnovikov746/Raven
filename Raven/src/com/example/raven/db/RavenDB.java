@@ -233,10 +233,19 @@ public class RavenDB extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		String selectQuery = "SELECT * " + " FROM "
-				+ Constants.TABLE_MESSAGES + ";";
+		String selectQuery = "SELECT " + Constants._ID + ","
+				+ Constants.COLUMN_MESSAGE_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TIME + ","
+				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT + ","
+				+ Constants.COLUMN_MESSAGE_READ + ","
+				+ Constants.COLUMN_MESSAGE_SENT + " FROM "
+				+ Constants.TABLE_MESSAGES + " WHERE "
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + "='" + contactPhone
+				+ "';";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
+		c.moveToFirst();
 		return c;
 	}
 
@@ -401,6 +410,7 @@ public class RavenDB extends SQLiteOpenHelper
 				+ Constants.TABLE_CONTACTS + ";";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
+		c.moveToFirst();
 		return c;
 	}	
 

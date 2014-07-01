@@ -1,11 +1,6 @@
 package com.example.raven.adapters;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import com.example.raven.R;
-import com.example.raven.db.Constants;
 
 import android.content.Context;
 import android.database.Cursor;

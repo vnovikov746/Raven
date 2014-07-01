@@ -94,14 +94,6 @@ public class SmsReceiver extends BroadcastReceiver
 	private void putSmsToDatabase(Context context,
 			ContentResolver contentResolver, SmsMessage sms)
 	{
-		if(HistoryActivity.currentActivity == "History")
-		{	
-			
-		}
-		else if(HistoryActivity.currentActivity == "Chat")
-		{	
-			
-		}
 		String body = sms.getMessageBody().toString();
 		String address = sms.getOriginatingAddress();
 		
