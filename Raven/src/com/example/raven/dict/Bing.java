@@ -5,13 +5,13 @@ import java.util.Map;
 public class Bing extends Translator {
 
 	@Override
-	public String translate(String lang, String text) {
+	public String translate(String from, String to, String text) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String[] translate(String lang, String[] text) {
+	public String[] translate(String from, String to, String[] text) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -33,5 +33,7 @@ public class Bing extends Translator {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 }

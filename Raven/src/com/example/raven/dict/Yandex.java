@@ -88,14 +88,14 @@ public class Yandex extends Translator {
 
 
 	@Override
-	public String translate(String lang, String text) {
+	public String translate(String from, String to, String text) {
 		String[] one_text = {text};
-		return translate(lang, one_text, "plain", "1", ServiceHandler.POST)[0];
+		return translate(from+"-"+to, one_text, "plain", "1", ServiceHandler.POST)[0];
 	}
 
 	@Override
-	public String[] translate(String lang, String[] text) {
-		return translate(lang, text, "plain", "1", ServiceHandler.POST);
+	public String[] translate(String from, String to, String[] text) {
+		return translate(from+"-"+to, text, "plain", "1", ServiceHandler.POST);
 	}
 	
 	

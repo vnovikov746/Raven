@@ -7,8 +7,8 @@ import java.util.Map;
 public abstract class Translator {
 
 	
-	public abstract String translate(String lang, String text);
-	public abstract String[] translate(String lang, String[] text);
+	public abstract String translate(String from, String to, String text);
+	public abstract String[] translate(String from, String to, String[] text);
 	public abstract Map<String, String> getLangs();
 	public abstract String detect(String text);
 	public abstract String detect(String[] text);
