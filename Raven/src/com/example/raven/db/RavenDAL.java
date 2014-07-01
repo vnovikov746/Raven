@@ -39,7 +39,6 @@ public class RavenDAL
 		}
 	}
 	
-	
 	/*
 	 * check if contact exist in the db
 	 */
@@ -47,7 +46,7 @@ public class RavenDAL
 	{
 		return db.isContactExist(contactPhone);
 	}
-
+	
 	/*
 	 * get all the messages related to contact
 	 */
@@ -63,7 +62,7 @@ public class RavenDAL
 	{
 		return db.getChatWithContactCursor(contactPhone);
 	}
-
+	
 	/*
 	 * Delete all Contacts
 	 */
@@ -127,7 +126,7 @@ public class RavenDAL
 	public Cursor getAllContactsCursor()
 	{
 		return db.getAllContactsCursor();
-	}	
+	}
 	
 	/*
 	 * Add flag
@@ -138,6 +137,14 @@ public class RavenDAL
 		{
 			db.addFlag(flagKey, flagValue);
 		}
+	}
+	
+	/*
+	 * Get contact name
+	 */
+	public String getContactName(String phone)
+	{
+		return db.getContactName(phone);
 	}
 	
 	/*

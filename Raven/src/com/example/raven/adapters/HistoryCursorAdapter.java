@@ -1,7 +1,5 @@
 package com.example.raven.adapters;
 
-import com.example.raven.R;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -10,14 +8,17 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import com.example.raven.R;
+import com.example.raven.db.RavenDAL;
 
 public class HistoryCursorAdapter extends CursorAdapter
 {
 	private LayoutInflater inflater;
+	private RavenDAL dal;
 	
 	public HistoryCursorAdapter(Context context, Cursor c)
 	{
-		super(context,c);
+		super(context, c);
 		inflater = LayoutInflater.from(context);
 	}
 	
@@ -32,12 +33,22 @@ public class HistoryCursorAdapter extends CursorAdapter
 		// c.getInt(5) = read or not
 		// c.getInt(6) = sent or not
 		
-		TextView phone = (TextView)view.findViewById(R.id.phone);
-		TextView time = (TextView)view.findViewById(R.id.time);
-		TextView txt = (TextView)view.findViewById(R.id.txt);
+		dal = new RavenDAL(context);
+		String name = dal.getContactName(c.getString(3));
 		
-		phone.setText(c.getString(3));
-		time.setText(c.getString(2));			
+		TextView phone = (TextView) view.findViewById(R.id.phone);
+		TextView time = (TextView) view.findViewById(R.id.time);
+		TextView txt = (TextView) view.findViewById(R.id.txt);
+		
+		if(name.equals(""))
+		{
+			phone.setText(c.getString(3));
+		}
+		else
+		{
+			phone.setText(name);
+		}
+		time.setText(c.getString(2));
 		txt.setText(c.getString(0));
 	}
 	

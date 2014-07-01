@@ -71,9 +71,19 @@ public class SmsReceiver extends BroadcastReceiver
 				SmsMessage sms = SmsMessage.createFromPdu((byte[]) smsExtra[i]);
 				
 				String body = sms.getMessageBody().toString();
-				String address = sms.getOriginatingAddress();
+				String phone = sms.getOriginatingAddress();
 				
-				messages += "SMS from " + address + " :\n";
+				TelephonyManager tm = (TelephonyManager) context
+						.getSystemService(Context.TELEPHONY_SERVICE);
+				
+				String countryCode = CountryCodeMap.COUNTRIES.get(tm
+						.getSimCountryIso());
+				if(phone.startsWith(countryCode))
+				{
+					phone = "0" + phone.substring(countryCode.length());
+				}
+				
+				messages += "SMS from " + phone + " :\n";
 				messages += body + "\n";
 				
 				// Here you can add any your code to work with incoming SMS
@@ -97,22 +107,28 @@ public class SmsReceiver extends BroadcastReceiver
 			ContentResolver contentResolver, SmsMessage sms)
 	{
 		String body = sms.getMessageBody().toString();
-		String address = sms.getOriginatingAddress();
+		String phone = sms.getOriginatingAddress();
 		
 		TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
-		String countryCode = tm.getSimCountryIso();
 		
-		if(address.startsWith("0"))
+		String countryCode = CountryCodeMap.COUNTRIES
+				.get(tm.getSimCountryIso());
+		if(phone.startsWith(countryCode))
 		{
-			address = countryCode + address.substring(1);
+			phone = "0" + phone.substring(countryCode.length());
 		}
 		
+		// if(phone.startsWith("0"))
+		// {
+		// phone = countryCode + phone.substring(1);
+		// }
+		
 		RavenDAL dal = new RavenDAL(context);
-		dal.addMessage(body, null, address, Constants.RECEIVED,
+		dal.addMessage(body, null, phone, Constants.RECEIVED,
 				Constants.NOT_READ, Constants.NOT_SENT);
 		Cursor c1 = dal.getAllLastMessagesCursor();
-		Cursor c2 = dal.getChatWithContactCursor(address);
+		Cursor c2 = dal.getChatWithContactCursor(phone);
 		HistoryActivity.mca.changeCursor(c1);
 		Chat.mca.changeCursor(c2);
 		
