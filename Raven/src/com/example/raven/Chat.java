@@ -30,19 +30,13 @@ public class Chat extends Activity
 	private String phoneNo;
 	private ListView list;
 	private ChatCursorAdapter mca;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		
-		if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
-		{
-			Cursor c = dal.getAllContactsCursor();
-			mca.changeCursor(c);
-		}
-
 		Intent intent = getIntent();
 		phoneNo = intent.getStringExtra("phoneNum");
 		if(phoneNo != null)
@@ -67,9 +61,9 @@ public class Chat extends Activity
 	
 	public void populateMessages(String phoneNo)
 	{
-		list = (ListView)findViewById(R.id.chatList);
+		list = (ListView) findViewById(R.id.chatList);
 		Cursor c = dal.getChatWithContactCursor(phoneNo);
-		mca = new ChatCursorAdapter(this,c);
+		mca = new ChatCursorAdapter(this, c);
 		list.setAdapter(mca);
 	}
 	
@@ -142,8 +136,8 @@ public class Chat extends Activity
 					+ phoneNumber.substring(1);
 		}
 		
-		dal.addMessage(message, null, phoneNumber,
-				Constants.SENT_BY_ME, Constants.NOT_READ, Constants.NOT_SENT);
+		dal.addMessage(message, null, phoneNumber, Constants.SENT_BY_ME,
+				Constants.NOT_READ, Constants.NOT_SENT);
 		Cursor c = dal.getChatWithContactCursor(phoneNo);
 		mca.changeCursor(c);
 		
