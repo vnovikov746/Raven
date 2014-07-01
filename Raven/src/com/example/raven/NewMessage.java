@@ -1,5 +1,8 @@
 package com.example.raven;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -8,7 +11,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -19,9 +21,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.example.raven.adapters.NewMessageAdapter;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
 import com.example.raven.objects.CountryCodeMap;
@@ -31,7 +33,8 @@ public class NewMessage extends Activity
 	private AutoCompleteTextView mTxtPhoneNo;
 	
 	private RavenDAL dal = HistoryActivity.dal;
-	private NewMessageAdapter mca;
+	
+	// private NewMessageAdapter mca;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -49,32 +52,45 @@ public class NewMessage extends Activity
 			public void onItemClick(AdapterView<?> av, View arg1, int index,
 					long arg3)
 			{
-				Cursor c = (Cursor) av.getItemAtPosition(index);
-				mTxtPhoneNo.setText("" + c.getString(2));
+				@SuppressWarnings("unchecked")
+				Map<String, String> map = (Map<String, String>) av
+						.getItemAtPosition(index);
+				String number = map.get("Phone");
+				mTxtPhoneNo.setText("" + number);
+				// Cursor c = (Cursor) av.getItemAtPosition(index);
+				// mTxtPhoneNo.setText("" + c.getString(2));
 			}
 		});
 		
-		Cursor c = dal.getAllContactsCursor();
-		mca = new NewMessageAdapter(this, c);
-		mTxtPhoneNo.setAdapter(mca);
-		if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
-		{
-			c = dal.getAllContactsCursor();
-			mca.changeCursor(c);
-			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
-					Constants.DONT_UPDATE_CONTACTS);
-		}
+		// Cursor c = dal.getAllContactsCursor();
+		// mca = new NewMessageAdapter(this, c);
+		// if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) ==
+		// Constants.UPDATE_CONTACTS)
+		// {
+		// c = dal.getAllContactsCursor();
+		// mca.changeCursor(c);
+		// dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
+		// Constants.DONT_UPDATE_CONTACTS);
+		// }
+		
+		ArrayList<Map<String, String>> mPeopleList = dal.getAllContacts();
+		SimpleAdapter mAdapter = new SimpleAdapter(this, mPeopleList,
+				R.layout.custcont_view,
+				new String[] { "Name", "Phone", "Type" }, new int[] {
+						R.id.ccontName, R.id.ccontNo, R.id.ccontType });
+		mTxtPhoneNo.setAdapter(mAdapter);
 	}
 	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
-		{
-			Cursor c = dal.getAllContactsCursor();
-			mca.changeCursor(c);
-		}
+		// if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) ==
+		// Constants.UPDATE_CONTACTS)
+		// {
+		// Cursor c = dal.getAllContactsCursor();
+		// mca.changeCursor(c);
+		// }
 		Intent intent = getIntent();
 		try
 		{
@@ -236,8 +252,9 @@ public class NewMessage extends Activity
 				switch(getResultCode())
 				{
 					case Activity.RESULT_OK:
-						Toast.makeText(NewMessage.this, "SMS delivered",
-								Toast.LENGTH_LONG).show();
+						// Toast.makeText(Chat.this, "SMS delivered",
+						// Toast.LENGTH_LONG).show();
+						Log.d("SMS NEW MESSAGE", "DELIVERED");
 						break;
 					case Activity.RESULT_CANCELED:
 						Toast.makeText(NewMessage.this, "SMS not delivered",

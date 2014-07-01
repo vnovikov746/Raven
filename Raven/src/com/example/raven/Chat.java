@@ -191,8 +191,9 @@ public class Chat extends Activity
 				switch(getResultCode())
 				{
 					case Activity.RESULT_OK:
-						Toast.makeText(Chat.this, "SMS delivered",
-								Toast.LENGTH_LONG).show();
+						// Toast.makeText(Chat.this, "SMS delivered",
+						// Toast.LENGTH_LONG).show();
+						Log.d("SMS CHAT", "DELIVERED");
 						break;
 					case Activity.RESULT_CANCELED:
 						Toast.makeText(Chat.this, "SMS not delivered",
@@ -204,5 +205,7 @@ public class Chat extends Activity
 		
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt2);
+		smsTxt.setText("");
 	}
 }
