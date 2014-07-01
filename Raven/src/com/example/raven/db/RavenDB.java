@@ -29,8 +29,7 @@ public class RavenDB extends SQLiteOpenHelper
 	{
 		// create contacts table
 		db.execSQL("CREATE TABLE " + Constants.TABLE_CONTACTS + "("
-				+ Constants._ID
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ Constants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ Constants.COLUMN_CONTACT_NAME + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_TYPE + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_PHONE_NUM + " TEXT_TYPE, "
@@ -38,8 +37,7 @@ public class RavenDB extends SQLiteOpenHelper
 				+ Constants.COLUMN_CONTACT_TRANSLATE + " INTEGER);");
 		
 		// create messages table
-		db.execSQL("CREATE TABLE " + Constants.TABLE_MESSAGES
-				+ "("
+		db.execSQL("CREATE TABLE " + Constants.TABLE_MESSAGES + "("
 				+ Constants._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT
@@ -152,16 +150,35 @@ public class RavenDB extends SQLiteOpenHelper
 	}
 	
 	/*
+	 * Get contact name
+	 */
+	public String getContactName(String phone)
+	{
+		String name;
+		SQLiteDatabase db = this.getWritableDatabase();
+		String selectQuery = "SELECT DISTINCT " + Constants.COLUMN_CONTACT_NAME
+				+ " FROM " + Constants.TABLE_CONTACTS + " WHERE "
+				+ Constants.COLUMN_CONTACT_PHONE_NUM + "='" + phone + "';";
+		Cursor c = db.rawQuery(selectQuery, null);
+		if(c.getCount() == 0)
+		{
+			return "";
+		}
+		c.moveToFirst();
+		name = c.getString(0);
+		return name;
+	}
+	
+	/*
 	 * check if contact exist in the db
 	 */
 	public boolean isContactExist(String contactPhone)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-
-		String selectQuery = "SELECT * FROM "
-				+ Constants.TABLE_CONTACTS + " WHERE "
-				+ Constants.COLUMN_CONTACT_PHONE_NUM + "='" + contactPhone
-				+ "';";
+		
+		String selectQuery = "SELECT * FROM " + Constants.TABLE_CONTACTS
+				+ " WHERE " + Constants.COLUMN_CONTACT_PHONE_NUM + "='"
+				+ contactPhone + "';";
 		Cursor c = db.rawQuery(selectQuery, null);
 		if(c.getCount() > 0)
 		{
@@ -216,14 +233,16 @@ public class RavenDB extends SQLiteOpenHelper
 		{
 			do
 			{
-				messages.add(new Message(c.getString(0), c.getString(1), c.getString(2), contactPhone, c.getInt(3), c.getInt(4), c.getInt(5)));
+				messages.add(new Message(c.getString(0), c.getString(1), c
+						.getString(2), contactPhone, c.getInt(3), c.getInt(4),
+						c.getInt(5)));
 			}
 			while(c.moveToNext());
 		}
 		c.close();
 		db.close();
 		
-		return messages;		
+		return messages;
 	}
 	
 	/*
@@ -248,7 +267,7 @@ public class RavenDB extends SQLiteOpenHelper
 		c.moveToFirst();
 		return c;
 	}
-
+	
 	/*
 	 * Add country/language to countries table
 	 */
@@ -313,27 +332,26 @@ public class RavenDB extends SQLiteOpenHelper
 		LinkedList<Message> messages = new LinkedList<Message>();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-
+		
 		String selectQuery = "SELECT " + Constants.COLUMN_MESSAGE_TXT + ","
 				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + ","
 				+ Constants.COLUMN_MESSAGE_TIME + ","
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT + ","
 				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT + ","
 				+ Constants.COLUMN_MESSAGE_READ + ","
-				+ Constants.COLUMN_MESSAGE_SENT + ","
-				+ "MAX(" + Constants._ID + ") AS _id" + " FROM "
-				+ Constants.TABLE_MESSAGES + " GROUP BY "
-				+ Constants.COLUMN_MESSAGE_TO_CONTACT + " ORDER BY "
-				+ Constants._ID
-				+ ";";
+				+ Constants.COLUMN_MESSAGE_SENT + "," + "MAX(" + Constants._ID
+				+ ") AS _id" + " FROM " + Constants.TABLE_MESSAGES
+				+ " GROUP BY " + Constants.COLUMN_MESSAGE_TO_CONTACT
+				+ " ORDER BY " + Constants._ID + ";";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
 		if(c.moveToFirst())
 		{
 			do
 			{
-				messages.add(new Message(c.getString(0), c.getString(1), c.getString(2),
-						c.getString(3), c.getInt(4), c.getInt(5), c.getInt(6)));
+				messages.add(new Message(c.getString(0), c.getString(1), c
+						.getString(2), c.getString(3), c.getInt(4),
+						c.getInt(5), c.getInt(6)));
 			}
 			while(c.moveToNext());
 		}
@@ -348,24 +366,22 @@ public class RavenDB extends SQLiteOpenHelper
 	public Cursor getAllLastMessagesCursor()
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
-
+		
 		String selectQuery = "SELECT " + Constants.COLUMN_MESSAGE_TXT + ","
 				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + ","
 				+ Constants.COLUMN_MESSAGE_TIME + ","
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT + ","
 				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT + ","
 				+ Constants.COLUMN_MESSAGE_READ + ","
-				+ Constants.COLUMN_MESSAGE_SENT + ","
-				+ "MAX(" + Constants._ID + ") AS _id" + " FROM "
-				+ Constants.TABLE_MESSAGES + " GROUP BY "
-				+ Constants.COLUMN_MESSAGE_TO_CONTACT + " ORDER BY "
-				+ Constants._ID
-				+ ";";
+				+ Constants.COLUMN_MESSAGE_SENT + "," + "MAX(" + Constants._ID
+				+ ") AS _id" + " FROM " + Constants.TABLE_MESSAGES
+				+ " GROUP BY " + Constants.COLUMN_MESSAGE_TO_CONTACT
+				+ " ORDER BY " + Constants._ID + ";";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
 		return c;
 	}
-
+	
 	/*
 	 * Get all contacts
 	 */
@@ -412,8 +428,8 @@ public class RavenDB extends SQLiteOpenHelper
 		Cursor c = db.rawQuery(selectQuery, null);
 		c.moveToFirst();
 		return c;
-	}	
-
+	}
+	
 	/*
 	 * Delete all contacts
 	 */
