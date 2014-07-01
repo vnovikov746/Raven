@@ -29,7 +29,7 @@ public class Chat extends Activity
 	private RavenDAL dal = HistoryActivity.dal;
 	private String phoneNo;
 	private ListView list;
-	private ChatCursorAdapter mca;
+	public static ChatCursorAdapter mca;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

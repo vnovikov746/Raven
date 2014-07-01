@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
+import com.example.raven.Chat;
 import com.example.raven.HistoryActivity;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
@@ -109,6 +111,10 @@ public class SmsReceiver extends BroadcastReceiver
 		RavenDAL dal = new RavenDAL(context);
 		dal.addMessage(body, null, address, Constants.RECEIVED,
 				Constants.NOT_READ, Constants.NOT_SENT);
+		Cursor c1 = dal.getAllLastMessagesCursor();
+		Cursor c2 = dal.getChatWithContactCursor(address);
+		HistoryActivity.mca.changeCursor(c1);
+		Chat.mca.changeCursor(c2);
 		
 		// Create SMS row
 		// ContentValues values = new ContentValues();

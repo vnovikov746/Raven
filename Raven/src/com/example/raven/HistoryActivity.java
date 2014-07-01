@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 import com.example.raven.adapters.HistoryCursorAdapter;
 import com.example.raven.db.Constants;
@@ -21,6 +21,7 @@ import com.example.raven.services.ContactObserverService;
 public class HistoryActivity extends Activity implements OnItemClickListener
 {
 	public static RavenDAL dal;
+	public static HistoryCursorAdapter mca;
 	
 	// menu
 	private final int groupId = 1;
@@ -34,13 +35,14 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_history);		
+		setContentView(R.layout.activity_history);
 		
 		dal = new RavenDAL(this);
 		
 		dal.addFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
 				Constants.CREATE_SERVICE_INSTANCE);
-		dal.addFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS, Constants.DONT_UPDATE_CONTACTS);
+		dal.addFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
+				Constants.DONT_UPDATE_CONTACTS);
 		
 		int createServiceInstance;
 		createServiceInstance = dal
@@ -58,10 +60,11 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int onItemClick, long id)
+	public void onItemClick(AdapterView<?> arg0, View arg1, int onItemClick,
+			long id)
 	{
-		Cursor c = (Cursor)arg0.getItemAtPosition(onItemClick);
-		String phone = c.getString(3);//phone in the table
+		Cursor c = (Cursor) arg0.getItemAtPosition(onItemClick);
+		String phone = c.getString(3);// phone in the table
 		Intent intent = new Intent(this, Chat.class);
 		intent.putExtra("phoneNum", phone);
 		startActivity(intent);
@@ -76,9 +79,9 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 	
 	public void showHistory()
 	{
-		list = (ListView)findViewById(R.id.historyList);
+		list = (ListView) findViewById(R.id.historyList);
 		Cursor c = dal.getAllLastMessagesCursor();
-		HistoryCursorAdapter mca = new HistoryCursorAdapter(this,c);
+		mca = new HistoryCursorAdapter(this, c);
 		list.setAdapter(mca);
 		list.setOnItemClickListener(this);
 	}
