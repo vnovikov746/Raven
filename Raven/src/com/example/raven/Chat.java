@@ -129,11 +129,11 @@ public class Chat extends Activity
 		
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		
-		String countryCode = tm.getSimCountryIso();
-		if(phoneNumber.startsWith("0"))
+		String countryCode = CountryCodeMap.COUNTRIES
+				.get(tm.getSimCountryIso());
+		if(phoneNumber.startsWith(countryCode))
 		{
-			phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
-					+ phoneNumber.substring(1);
+			phoneNumber = "0" + phoneNumber.substring(countryCode.length());
 		}
 		
 		dal.addMessage(message, null, phoneNumber, Constants.SENT_BY_ME,

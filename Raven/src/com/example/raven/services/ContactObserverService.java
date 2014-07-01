@@ -35,7 +35,7 @@ public class ContactObserverService extends Service
 	public void onCreate()
 	{
 		super.onCreate();
-
+		
 		dal = new RavenDAL(this);
 		dal.updateFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
 				Constants.DONT_CREATE_SERVICE_INSTANCE);
@@ -43,7 +43,7 @@ public class ContactObserverService extends Service
 		mPeopleList = new ArrayList<Map<String, String>>();
 		
 		PopulatePeopleList();
-	
+		
 		this.getContentResolver().registerContentObserver(
 				ContactsContract.Contacts.CONTENT_URI, true, mObserver);
 	}
@@ -116,13 +116,14 @@ public class ContactObserverService extends Service
 					
 					TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 					
-					String countryCode = tm.getSimCountryIso();
-					if(phoneNumber.startsWith("0"))
+					String countryCode = CountryCodeMap.COUNTRIES.get(tm
+							.getSimCountryIso());
+					if(phoneNumber.startsWith(countryCode))
 					{
-						phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
-								+ phoneNumber.substring(1);
+						phoneNumber = "0"
+								+ phoneNumber.substring(countryCode.length());
 					}
-
+					
 					NamePhoneType.put("Phone", phoneNumber);
 					
 					if(numberType.equals("0"))
@@ -153,7 +154,6 @@ public class ContactObserverService extends Service
 		dal.addAllConacts(mPeopleList);
 		dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
 				Constants.UPDATE_CONTACTS);
-		Toast.makeText(this, "Contacts Added to DB",
-		Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Contacts Added to DB", Toast.LENGTH_SHORT).show();
 	}
 }

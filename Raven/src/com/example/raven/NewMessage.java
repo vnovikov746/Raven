@@ -116,13 +116,14 @@ public class NewMessage extends Activity
 	{
 		String phoneNo = mTxtPhoneNo.getText().toString().trim();
 		
-		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		String countryCode = tm.getSimCountryIso();
-		if(phoneNo.startsWith("0"))
-		{
-			phoneNo = CountryCodeMap.COUNTRIES.get(countryCode)
-					+ phoneNo.substring(1);
-		}
+		// TelephonyManager tm = (TelephonyManager)
+		// getSystemService(Context.TELEPHONY_SERVICE);
+		// String countryCode = tm.getSimCountryIso();
+		// if(phoneNo.startsWith("0"))
+		// {
+		// phoneNo = CountryCodeMap.COUNTRIES.get(countryCode)
+		// + phoneNo.substring(1);
+		// }
 		
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String message = smsTxt.getText().toString().trim();
@@ -192,11 +193,11 @@ public class NewMessage extends Activity
 		
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		
-		String countryCode = tm.getSimCountryIso();
-		if(phoneNumber.startsWith("0"))
+		String countryCode = CountryCodeMap.COUNTRIES
+				.get(tm.getSimCountryIso());
+		if(phoneNumber.startsWith(countryCode))
 		{
-			phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
-					+ phoneNumber.substring(1);
+			phoneNumber = "0" + phoneNumber.substring(countryCode.length());
 		}
 		
 		dal.addMessage(message, null, phoneNumber, Constants.SENT_BY_ME,
