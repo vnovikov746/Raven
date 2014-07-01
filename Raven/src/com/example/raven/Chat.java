@@ -10,28 +10,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.raven.adapters.ChatCursorAdapter;
 import com.example.raven.db.Constants;
+import com.example.raven.db.RavenDAL;
 import com.example.raven.objects.ContactList;
 import com.example.raven.objects.CountryCodeMap;
-import com.example.raven.objects.Message;
 
 public class Chat extends Activity
 {
+	private RavenDAL dal = HistoryActivity.dal;
 	private String phoneNo;
-	
+	private ListView list;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -54,7 +55,7 @@ public class Chat extends Activity
 	public void onResume()
 	{
 		HistoryActivity.currentActivity = "Chat";
-		if(HistoryActivity.dal
+		if(dal
 				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
 		{
 			ContactList.updateList(this);
@@ -72,34 +73,10 @@ public class Chat extends Activity
 	
 	public void populateMessages(String phoneNo)
 	{
-		ArrayList<Message> messages = HistoryActivity.dal
-				.getChatWithContact(phoneNo);
-		
-		TableLayout chatTable = (TableLayout) findViewById(R.id.chatTable);
-		chatTable.setStretchAllColumns(true);
-		chatTable.bringToFront();
-		
-		chatTable.removeAllViews();
-		
-		TableRow tr = new TableRow(this);
-		
-		for(int i = 0; i < messages.size(); i++)
-		{
-			tr = new TableRow(this);
-			TextView tv = new TextView(this);
-			tv.setText("" + messages.get(i).getMessageTxt());
-			tv.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{	
-					
-				}
-			});
-			
-			tr.addView(tv);
-			chatTable.addView(tr);
-		}
+		list = (ListView)findViewById(R.id.chatList);
+		Cursor c = dal.getChatWithContactCursor(phoneNo);
+		ChatCursorAdapter mca = new ChatCursorAdapter(this,c);
+		list.setAdapter(mca);
 	}
 	
 	public void onSendClick(View v)
@@ -128,12 +105,6 @@ public class Chat extends Activity
 				case TelephonyManager.SIM_STATE_READY:
 					// do something
 					sendSMS(phoneNo, message); // method to send message
-					TableLayout chatTable = (TableLayout) findViewById(R.id.chatTable);
-					TableRow tr = new TableRow(this);
-					TextView tv = new TextView(this);
-					tv.setText("" + message);
-					tr.addView(tv);
-					chatTable.addView(tr);
 					break;
 				case TelephonyManager.SIM_STATE_UNKNOWN:
 					// do something
@@ -177,7 +148,7 @@ public class Chat extends Activity
 					+ phoneNumber.substring(1);
 		}
 		
-		HistoryActivity.dal.addMessage(message, null, phoneNumber,
+		dal.addMessage(message, null, phoneNumber,
 				Constants.SENT_BY_ME, Constants.NOT_READ, Constants.NOT_SENT);
 		
 		PendingIntent sentPI = PendingIntent.getBroadcast(Chat.this, 0,

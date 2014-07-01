@@ -1,4 +1,4 @@
-package com.example.raven.objects;
+package com.example.raven.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.objects.CountryCodeMap;
 
 public class ContactObserverService extends Service
 {

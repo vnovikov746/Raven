@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.example.raven.objects.ServiceHandler;
+import com.example.raven.services.ServiceHandler;
 
 
 public class Yandex extends Translator {

@@ -15,28 +15,6 @@
         android:onClick="onSendNew"
         android:text="@string/NewMessage" />
 
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/NewMessageBtn" >
-
-        <TableLayout
-            android:id="@+id/historyTable"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-
-            <TableRow
-                android:id="@+id/tableRow"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-            </TableRow>
-        </TableLayout>
-
-    </ScrollView>
 
     <Button
         android:id="@+id/updateButton"
@@ -46,5 +24,16 @@
         android:layout_toRightOf="@+id/NewMessageBtn"
         android:onClick="onUpdateClick"
         android:text="@string/updateBtn" />
+
+    <ListView
+        android:id="@+id/historyList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/NewMessageBtn" >
+
+    </ListView>
 
 </RelativeLayout>

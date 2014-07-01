@@ -41,19 +41,6 @@ public class NewMessage extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_message);
 		
-//		int updateContacts;
-//		updateContacts = dal
-//				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS);
-//		
-//		if(updateContacts == Constants.UPDATE_CONTACTS)
-//		{
-//			Toast.makeText(this, "Contact List Updating....",
-//					Toast.LENGTH_LONG * 2).show();
-//			ContactsListService.mPeopleList = dal.getAllContacts();
-//			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
-//					Constants.DONT_UPDATE_CONTACTS);
-//		}
-		
 		ContactList.updateList(this);			
 		
 		mTxtPhoneNo = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);
@@ -84,7 +71,7 @@ public class NewMessage extends Activity
 	@Override
 	public void onResume()
 	{
-		if(HistoryActivity.dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
+		if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
 		{
 			ContactList.updateList(this);			
 		}
@@ -145,9 +132,9 @@ public class NewMessage extends Activity
 					break;
 				case TelephonyManager.SIM_STATE_READY:
 					// do something
-					if(!HistoryActivity.dal.isContactExist(phoneNo))
+					if(!dal.isContactExist(phoneNo))
 					{
-						HistoryActivity.dal.addContact("", phoneNo, "temp", "", 0);
+						dal.addContact("", phoneNo, "temp", "", 0);
 					}
 					sendSMS(phoneNo, message); // method to send message					
 
@@ -187,7 +174,6 @@ public class NewMessage extends Activity
 	{
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
-		RavenDAL dal = new RavenDAL(this);
 		
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		

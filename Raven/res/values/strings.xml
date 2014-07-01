@@ -14,5 +14,8 @@
     <string name="title_activity_chat">Chat</string>
     <string name="title_activity_global_settings">GlobalSettings</string>
     <string name="title_activity_user_settings">UserSettings</string>
+    <string name="phone">phone</string>
+    <string name="time">time</string>
+    <string name="txt">txt</string>
 
 </resources>

@@ -24,7 +24,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <service
-            android:name="com.example.raven.objects.ContactObserverService"
+            android:name="com.example.raven.services.ContactObserverService"
             android:exported="false"
             android:process=":ravenServiceProcess">
         </service>

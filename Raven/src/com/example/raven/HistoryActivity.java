@@ -1,32 +1,25 @@
 package com.example.raven;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
+import com.example.raven.adapters.HistoryCursorAdapter;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
 import com.example.raven.objects.ContactList;
-import com.example.raven.objects.ContactObserverService;
-import com.example.raven.objects.Message;
 import com.example.raven.objects.SmsReceiver;
+import com.example.raven.services.ContactObserverService;
 
-public class HistoryActivity extends Activity
+public class HistoryActivity extends Activity implements OnItemClickListener
 {
 	public static RavenDAL dal;
 	public static String currentActivity;
@@ -37,11 +30,13 @@ public class HistoryActivity extends Activity
 	private final int GlobalSettingsId = Menu.FIRST + 1;
 	private final int AboutId = Menu.FIRST + 2;
 	
+	private ListView list;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_history);
+		setContentView(R.layout.activity_history);		
 		
 		currentActivity = "History";
 		
@@ -63,20 +58,23 @@ public class HistoryActivity extends Activity
 		}
 		ContactList.updateList(this);
 		
-		// if(updateContacts == Constants.UPDATE_CONTACTS)
-		// {
-		// Toast.makeText(this, "Contact List Updating....",
-		// Toast.LENGTH_LONG * 2).show();
-		// mPeopleList = dal.getAllContacts();
-		// dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
-		// Constants.DONT_UPDATE_CONTACTS);
-		// }
 		showHistory();
+	}
+	
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int onItemClick, long id)
+	{
+		Cursor c = (Cursor)arg0.getItemAtPosition(onItemClick);
+		String phone = c.getString(3);//phone in the table
+		Intent intent = new Intent(this, Chat.class);
+		intent.putExtra("phoneNum", phone);
+		startActivity(intent);
 	}
 	
 	@Override
 	public void onResume()
 	{
+		ContactList.updateList(this);
 		currentActivity = "History";
 		super.onResume();
 		showHistory();
@@ -84,50 +82,11 @@ public class HistoryActivity extends Activity
 	
 	public void showHistory()
 	{
-		LinkedList<Message> messages = dal.getAllLastMessages();
-		
-		TableLayout historyTable = (TableLayout) findViewById(R.id.historyTable);
-		historyTable.setStretchAllColumns(true);
-		historyTable.bringToFront();
-		
-		historyTable.removeAllViews();
-		
-		TableRow tr = new TableRow(this);
-		
-		if(messages.size() == 0)
-		{
-			messages.add(new Message("No messages", null,
-					new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale
-							.getDefault()).format(new Date()), "Raven Support",
-					Constants.RECEIVED, Constants.READ, Constants.NOT_SENT));
-		}
-		
-		for(int i = 0; i < messages.size(); i++)
-		{
-			tr = new TableRow(this);
-			TextView tv = new TextView(this);
-			tv.setText("" + messages.get(i).getContactPhoneNum() + " "
-					+ messages.get(i).getMessageTime() + " "
-					+ messages.get(i).getMessageTxt());
-			tv.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					TableRow tr = (TableRow) v.getParent();
-					TextView items = (TextView) tr.getChildAt(0);
-					String phone = items.getText().toString().split(" ")[0];
-					Context context = getApplicationContext();
-					Intent intent = new Intent(context, Chat.class);
-					intent.putExtra("phoneNum", phone);
-					startActivity(intent);
-				}
-			});
-			
-			tr.addView(tv);
-			
-			historyTable.addView(tr);
-		}
+		list = (ListView)findViewById(R.id.historyList);
+		Cursor c = dal.getAllLastMessagesCursor();
+		HistoryCursorAdapter mca = new HistoryCursorAdapter(this,c);
+		list.setAdapter(mca);
+		list.setOnItemClickListener(this);
 	}
 	
 	@Override

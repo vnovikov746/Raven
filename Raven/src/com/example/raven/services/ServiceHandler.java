@@ -1,4 +1,4 @@
-package com.example.raven.objects;
+package com.example.raven.services;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -87,10 +87,8 @@ public class ServiceHandler {
     	try {
 			return task.execute(url, method, params).get();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

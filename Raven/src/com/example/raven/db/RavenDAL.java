@@ -58,6 +58,14 @@ public class RavenDAL
 	}
 	
 	/*
+	 * get cursor for all the messages related to contact
+	 */
+	public Cursor getChatWithContactCursor(String contactPhone)
+	{
+		return db.getChatWithContactCursor(contactPhone);
+	}
+
+	/*
 	 * Delete all Contacts
 	 */
 	public void deleteAllContacts()
@@ -99,12 +107,28 @@ public class RavenDAL
 	}
 	
 	/*
+	 * Get Cursor fot last messages from all contacts
+	 */
+	public Cursor getAllLastMessagesCursor()
+	{
+		return db.getAllLastMessagesCursor();
+	}
+	
+	/*
 	 * Get all Contacts
 	 */
 	public ArrayList<Map<String, String>> getAllContacts()
 	{
 		return db.getAllContacts();
 	}
+	
+	/*
+	 * Get all contacts cursor
+	 */
+	public Cursor getAllContactsCursor()
+	{
+		return db.getAllContactsCursor();
+	}	
 	
 	/*
 	 * Add flag

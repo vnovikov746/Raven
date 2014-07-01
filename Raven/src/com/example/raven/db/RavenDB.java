@@ -29,7 +29,7 @@ public class RavenDB extends SQLiteOpenHelper
 	{
 		// create contacts table
 		db.execSQL("CREATE TABLE " + Constants.TABLE_CONTACTS + "("
-				+ Constants.COLUMN_CONTACT_ID
+				+ Constants._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ Constants.COLUMN_CONTACT_NAME + " TEXT_TYPE, "
 				+ Constants.COLUMN_CONTACT_TYPE + " TEXT_TYPE, "
@@ -40,7 +40,7 @@ public class RavenDB extends SQLiteOpenHelper
 		// create messages table
 		db.execSQL("CREATE TABLE " + Constants.TABLE_MESSAGES
 				+ "("
-				+ Constants.COLUMN_MESSAGE_ID
+				+ Constants._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ Constants.COLUMN_MESSAGE_TO_CONTACT
 				+ " TEXT_TYPE, " // contacts phone
@@ -200,7 +200,8 @@ public class RavenDB extends SQLiteOpenHelper
 		ArrayList<Message> messages = new ArrayList<Message>();
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		String selectQuery = "SELECT " + Constants.COLUMN_MESSAGE_TXT + ","
+		String selectQuery = "SELECT " + Constants._ID + ","
+				+ Constants.COLUMN_MESSAGE_TXT + ","
 				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + ","
 				+ Constants.COLUMN_MESSAGE_TIME + ","
 				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT + ","
@@ -225,6 +226,20 @@ public class RavenDB extends SQLiteOpenHelper
 		return messages;		
 	}
 	
+	/*
+	 * get cursor for all the messages related to contact
+	 */
+	public Cursor getChatWithContactCursor(String contactPhone)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		String selectQuery = "SELECT * " + " FROM "
+				+ Constants.TABLE_MESSAGES + ";";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		return c;
+	}
+
 	/*
 	 * Add country/language to countries table
 	 */
@@ -289,16 +304,27 @@ public class RavenDB extends SQLiteOpenHelper
 		LinkedList<Message> messages = new LinkedList<Message>();
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		String selectQuery = "SELECT DISTINCT "
-				+ Constants.COLUMN_MESSAGE_TO_CONTACT + " FROM "
-				+ Constants.TABLE_MESSAGES + ";";
+
+		String selectQuery = "SELECT " + Constants.COLUMN_MESSAGE_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TIME + ","
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + ","
+				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT + ","
+				+ Constants.COLUMN_MESSAGE_READ + ","
+				+ Constants.COLUMN_MESSAGE_SENT + ","
+				+ "MAX(" + Constants._ID + ") AS _id" + " FROM "
+				+ Constants.TABLE_MESSAGES + " GROUP BY "
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + " ORDER BY "
+				+ Constants._ID
+				+ ";";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
 		if(c.moveToFirst())
 		{
 			do
 			{
-				messages.add(getLastMessage(c.getString(0)));
+				messages.add(new Message(c.getString(0), c.getString(1), c.getString(2),
+						c.getString(3), c.getInt(4), c.getInt(5), c.getInt(6)));
 			}
 			while(c.moveToNext());
 		}
@@ -307,6 +333,30 @@ public class RavenDB extends SQLiteOpenHelper
 		return messages;
 	}
 	
+	/*
+	 * Get Cursor fot last messages from all contacts
+	 */
+	public Cursor getAllLastMessagesCursor()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String selectQuery = "SELECT " + Constants.COLUMN_MESSAGE_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TRANSTATED_TXT + ","
+				+ Constants.COLUMN_MESSAGE_TIME + ","
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + ","
+				+ Constants.COLUMN_MESSAGE_RECEIVED_OR_SENT + ","
+				+ Constants.COLUMN_MESSAGE_READ + ","
+				+ Constants.COLUMN_MESSAGE_SENT + ","
+				+ "MAX(" + Constants._ID + ") AS _id" + " FROM "
+				+ Constants.TABLE_MESSAGES + " GROUP BY "
+				+ Constants.COLUMN_MESSAGE_TO_CONTACT + " ORDER BY "
+				+ Constants._ID
+				+ ";";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		return c;
+	}
+
 	/*
 	 * Get all contacts
 	 */
@@ -338,6 +388,22 @@ public class RavenDB extends SQLiteOpenHelper
 		return contacts;
 	}
 	
+	/*
+	 * Get all contacts cursor
+	 */
+	public Cursor getAllContactsCursor()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		String selectQuery = "SELECT " + Constants._ID + ","
+				+ Constants.COLUMN_CONTACT_NAME + ","
+				+ Constants.COLUMN_CONTACT_PHONE_NUM + ","
+				+ Constants.COLUMN_CONTACT_TYPE + " FROM "
+				+ Constants.TABLE_CONTACTS + ";";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		return c;
+	}	
+
 	/*
 	 * Delete all contacts
 	 */
