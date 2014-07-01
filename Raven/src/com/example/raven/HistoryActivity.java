@@ -41,8 +41,6 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 		
 		dal.addFlag(Constants.COLUMN_FLAG_SERVICE_INSTANCE,
 				Constants.CREATE_SERVICE_INSTANCE);
-		dal.addFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
-				Constants.DONT_UPDATE_CONTACTS);
 		
 		int createServiceInstance;
 		createServiceInstance = dal

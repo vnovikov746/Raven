@@ -61,6 +61,8 @@ public class NewMessage extends Activity
 		{
 			c = dal.getAllContactsCursor();
 			mca.changeCursor(c);
+			dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
+					Constants.DONT_UPDATE_CONTACTS);
 		}
 	}
 	
