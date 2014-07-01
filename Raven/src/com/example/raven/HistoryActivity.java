@@ -29,6 +29,7 @@ import com.example.raven.objects.SmsReceiver;
 public class HistoryActivity extends Activity
 {
 	public static RavenDAL dal;
+	public static String currentActivity;
 	
 	// menu
 	private final int groupId = 1;
@@ -41,6 +42,8 @@ public class HistoryActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
+		
+		currentActivity = "History";
 		
 		dal = new RavenDAL(this);
 		
@@ -74,6 +77,7 @@ public class HistoryActivity extends Activity
 	@Override
 	public void onResume()
 	{
+		currentActivity = "History";
 		super.onResume();
 		showHistory();
 	}

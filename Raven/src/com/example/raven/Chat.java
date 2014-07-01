@@ -38,7 +38,9 @@ public class Chat extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		
-		ContactList.updateList(this);			
+		HistoryActivity.currentActivity = "Chat";
+		
+		ContactList.updateList(this);
 		
 		Intent intent = getIntent();
 		phoneNo = intent.getStringExtra("phoneNum");
@@ -51,9 +53,11 @@ public class Chat extends Activity
 	@Override
 	public void onResume()
 	{
-		if(HistoryActivity.dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
+		HistoryActivity.currentActivity = "Chat";
+		if(HistoryActivity.dal
+				.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
 		{
-			ContactList.updateList(this);			
+			ContactList.updateList(this);
 		}
 		super.onResume();
 	}
@@ -67,8 +71,9 @@ public class Chat extends Activity
 	}
 	
 	public void populateMessages(String phoneNo)
-	{	
-		ArrayList<Message> messages = HistoryActivity.dal.getChatWithContact(phoneNo);
+	{
+		ArrayList<Message> messages = HistoryActivity.dal
+				.getChatWithContact(phoneNo);
 		
 		TableLayout chatTable = (TableLayout) findViewById(R.id.chatTable);
 		chatTable.setStretchAllColumns(true);
@@ -87,8 +92,8 @@ public class Chat extends Activity
 			{
 				@Override
 				public void onClick(View v)
-				{
-
+				{	
+					
 				}
 			});
 			
@@ -171,7 +176,7 @@ public class Chat extends Activity
 			phoneNumber = CountryCodeMap.COUNTRIES.get(countryCode)
 					+ phoneNumber.substring(1);
 		}
-	
+		
 		HistoryActivity.dal.addMessage(message, null, phoneNumber,
 				Constants.SENT_BY_ME, Constants.NOT_READ, Constants.NOT_SENT);
 		
@@ -190,7 +195,7 @@ public class Chat extends Activity
 			{
 				switch(getResultCode())
 				{
-					case Activity.RESULT_OK:						
+					case Activity.RESULT_OK:
 						Toast.makeText(Chat.this, "SMS sent",
 								Toast.LENGTH_SHORT).show();
 						break;

@@ -9,6 +9,7 @@ import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
+import com.example.raven.HistoryActivity;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
 
@@ -20,10 +21,10 @@ public class SmsReceiver extends BroadcastReceiver
 	// status, type, reply_path_present,
 	// subject, body, service_center,
 	// locked, error_code, seen]
-
+	
 	public static final String SMS_EXTRA_NAME = "pdus";
 	public static final String SMS_URI = "content://sms";
-
+	
 	public static final String ADDRESS = "address";
 	public static final String PERSON = "person";
 	public static final String DATE = "date";
@@ -32,53 +33,53 @@ public class SmsReceiver extends BroadcastReceiver
 	public static final String TYPE = "type";
 	public static final String BODY = "body";
 	public static final String SEEN = "seen";
-
+	
 	public static final int MESSAGE_TYPE_INBOX = 1;
 	public static final int MESSAGE_TYPE_SENT = 2;
-
+	
 	public static final int MESSAGE_IS_NOT_READ = 0;
 	public static final int MESSAGE_IS_READ = 1;
-
+	
 	public static final int MESSAGE_IS_NOT_SEEN = 0;
 	public static final int MESSAGE_IS_SEEN = 1;
-
+	
 	// Change the password here or give a user possibility to change it
 	public static final byte[] PASSWORD = new byte[] { 0x20, 0x32, 0x34, 0x47,
 			(byte) 0x84, 0x33, 0x58 };
-
+	
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
 		// Get SMS map from Intent
 		Bundle extras = intent.getExtras();
-
+		
 		String messages = "";
-
+		
 		if(extras != null)
 		{
 			// Get received SMS array
 			Object[] smsExtra = (Object[]) extras.get(SMS_EXTRA_NAME);
-
+			
 			// Get ContentResolver object for pushing encrypted SMS to incoming
 			// folder
 			ContentResolver contentResolver = context.getContentResolver();
-
+			
 			for(int i = 0; i < smsExtra.length; ++i)
 			{
 				SmsMessage sms = SmsMessage.createFromPdu((byte[]) smsExtra[i]);
-
+				
 				String body = sms.getMessageBody().toString();
 				String address = sms.getOriginatingAddress();
-
+				
 				messages += "SMS from " + address + " :\n";
 				messages += body + "\n";
-
+				
 				// Here you can add any your code to work with incoming SMS
 				// I added encrypting of all received SMS
-
+				
 				putSmsToDatabase(context, contentResolver, sms);
 			}
-
+			
 			// Display SMS message
 			Toast.makeText(context, "RAVEN: " + messages, Toast.LENGTH_SHORT)
 					.show();
@@ -89,26 +90,34 @@ public class SmsReceiver extends BroadcastReceiver
 		// Be careful!
 		// this.abortBroadcast();
 	}
-
+	
 	private void putSmsToDatabase(Context context,
 			ContentResolver contentResolver, SmsMessage sms)
 	{
+		if(HistoryActivity.currentActivity == "History")
+		{	
+			
+		}
+		else if(HistoryActivity.currentActivity == "Chat")
+		{	
+			
+		}
 		String body = sms.getMessageBody().toString();
 		String address = sms.getOriginatingAddress();
-
+		
 		TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		String countryCode = tm.getSimCountryIso();
-
+		
 		if(address.startsWith("0"))
 		{
 			address = countryCode + address.substring(1);
 		}
-
+		
 		RavenDAL dal = new RavenDAL(context);
 		dal.addMessage(body, null, address, Constants.RECEIVED,
 				Constants.NOT_READ, Constants.NOT_SENT);
-
+		
 		// Create SMS row
 		// ContentValues values = new ContentValues();
 		// values.put(ADDRESS, sms.getOriginatingAddress());
