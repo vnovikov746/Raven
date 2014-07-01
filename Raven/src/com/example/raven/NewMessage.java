@@ -38,7 +38,7 @@ public class NewMessage extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_message);
-				
+		
 		mTxtPhoneNo = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		smsTxt.clearFocus();
@@ -49,13 +49,13 @@ public class NewMessage extends Activity
 			public void onItemClick(AdapterView<?> av, View arg1, int index,
 					long arg3)
 			{
-				Cursor c = (Cursor)av.getItemAtPosition(index);
+				Cursor c = (Cursor) av.getItemAtPosition(index);
 				mTxtPhoneNo.setText("" + c.getString(2));
 			}
 		});
 		
 		Cursor c = dal.getAllContactsCursor();
-		mca = new NewMessageAdapter(this,c);
+		mca = new NewMessageAdapter(this, c);
 		mTxtPhoneNo.setAdapter(mca);
 		if(dal.getFlagValue(Constants.COLUMN_FLAG_UPDATE_CONTACTS) == Constants.UPDATE_CONTACTS)
 		{
@@ -97,7 +97,7 @@ public class NewMessage extends Activity
 	public void onSendClick(View v)
 	{
 		String phoneNo = mTxtPhoneNo.getText().toString().trim();
-
+		
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String countryCode = tm.getSimCountryIso();
 		if(phoneNo.startsWith("0"))
@@ -105,7 +105,7 @@ public class NewMessage extends Activity
 			phoneNo = CountryCodeMap.COUNTRIES.get(countryCode)
 					+ phoneNo.substring(1);
 		}
-
+		
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String message = smsTxt.getText().toString().trim();
 		
@@ -133,8 +133,8 @@ public class NewMessage extends Activity
 					{
 						dal.addContact("", phoneNo, "temp", "", 0);
 					}
-					sendSMS(phoneNo, message); // method to send message					
-
+					sendSMS(phoneNo, message); // method to send message
+					
 					Intent intent = new Intent(this, Chat.class);
 					intent.putExtra("phoneNum", phoneNo);
 					startActivity(intent);
@@ -200,8 +200,9 @@ public class NewMessage extends Activity
 				switch(getResultCode())
 				{
 					case Activity.RESULT_OK:
-						Toast.makeText(NewMessage.this, "SMS sent",
-								Toast.LENGTH_SHORT).show();
+						// Toast.makeText(NewMessage.this, "SMS sent",
+						// Toast.LENGTH_SHORT).show();
+						Log.d("NEW MESSAGE SMS", "SMS SENT");
 						break;
 					case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 						Toast.makeText(NewMessage.this, "Generic failure",

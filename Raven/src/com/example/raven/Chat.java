@@ -157,8 +157,9 @@ public class Chat extends Activity
 				switch(getResultCode())
 				{
 					case Activity.RESULT_OK:
-						Toast.makeText(Chat.this, "SMS sent",
-								Toast.LENGTH_SHORT).show();
+						// Toast.makeText(Chat.this, "SMS sent",
+						// Toast.LENGTH_SHORT).show();
+						Log.d("CHAT SMS", "SMS SENT");
 						break;
 					case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 						Toast.makeText(Chat.this, "Generic failure",
