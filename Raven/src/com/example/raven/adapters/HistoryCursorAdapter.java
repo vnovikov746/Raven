@@ -55,6 +55,6 @@ public class HistoryCursorAdapter extends CursorAdapter
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent)
 	{
-		return inflater.inflate(R.layout.message_item_view, parent, false);
+		return inflater.inflate(R.layout.history_item_view, parent, false);
 	}
 }

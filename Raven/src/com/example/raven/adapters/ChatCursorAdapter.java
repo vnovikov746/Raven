@@ -38,6 +38,6 @@ public class ChatCursorAdapter extends CursorAdapter
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent)
 	{
-		return inflater.inflate(R.layout.chat_message, parent, false);
+		return inflater.inflate(R.layout.chat_item_view, parent, false);
 	}
 }
