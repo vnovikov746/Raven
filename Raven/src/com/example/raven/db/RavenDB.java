@@ -376,7 +376,7 @@ public class RavenDB extends SQLiteOpenHelper
 				+ Constants.COLUMN_MESSAGE_SENT + "," + "MAX(" + Constants._ID
 				+ ") AS _id" + " FROM " + Constants.TABLE_MESSAGES
 				+ " GROUP BY " + Constants.COLUMN_MESSAGE_TO_CONTACT
-				+ " ORDER BY " + Constants._ID + ";";
+				+ " ORDER BY " + Constants._ID + " DESC;";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
 		return c;

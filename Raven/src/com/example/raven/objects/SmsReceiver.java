@@ -1,11 +1,15 @@
 package com.example.raven.objects;
 
+import com.example.raven.R;
+
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
@@ -131,6 +135,11 @@ public class SmsReceiver extends BroadcastReceiver
 		Cursor c2 = dal.getChatWithContactCursor(phone);
 		HistoryActivity.mca.changeCursor(c1);
 		Chat.mca.changeCursor(c2);
+		
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setSmallIcon(R.drawable.ic_launcher).setContentTitle("Received SMS").setContentText(body);
+		Intent resultIntent = new Intent(context, Chat.class);
+		PendingIntent resultPedingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		mBuilder.setContentIntent(resultPedingIntent);
 		
 		// Create SMS row
 		// ContentValues values = new ContentValues();

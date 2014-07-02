@@ -65,6 +65,7 @@ public class Chat extends Activity
 		Cursor c = dal.getChatWithContactCursor(phoneNo);
 		mca = new ChatCursorAdapter(this, c);
 		list.setAdapter(mca);
+		list.setSelection(list.getAdapter().getCount()-1);
 	}
 	
 	public void onSendClick(View v)
@@ -93,6 +94,7 @@ public class Chat extends Activity
 				case TelephonyManager.SIM_STATE_READY:
 					// do something
 					sendSMS(phoneNo, message); // method to send message
+					list.setSelection(list.getAdapter().getCount()-1);
 					break;
 				case TelephonyManager.SIM_STATE_UNKNOWN:
 					// do something

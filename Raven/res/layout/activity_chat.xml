@@ -9,28 +9,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Chat" >
 
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/SendBtn2"
-        android:layout_marginLeft="29dp" >
-    </ScrollView>
 
-    <MultiAutoCompleteTextView
-        android:id="@+id/SmsTxt2"
+    <ListView
+        android:id="@+id/chatList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/buttonSpace"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/SendBtn2"
-        android:cursorVisible="true"
-        android:ems="10"
-        android:text="@string/blank"
-        android:textColor="#F5F5F5" >
-        <requestFocus />
-    </MultiAutoCompleteTextView>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+    </ListView>
 
     <Button
         android:id="@+id/SendBtn2"
@@ -39,16 +28,40 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="#9F79EE"
-		android:onClick="onSendClick"
+        android:onClick="onSendClick"
         android:text="@string/sendBtn" />
 
-    <ListView
-        android:id="@+id/chatList"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/buttonSpace"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/SendBtn2"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chatList"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
-    </ListView>
+        android:layout_toLeftOf="@+id/SendBtn2" >
+    </ScrollView>
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/SmsTxt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/scrollView2"
+        android:layout_alignTop="@+id/buttonSpace"
+        android:cursorVisible="true"
+        android:ems="10"
+        android:gravity="bottom"
+        android:text="@string/blank"
+        android:textColor="#F5F5F5" />
 
 </RelativeLayout>
