@@ -73,7 +73,8 @@ public class ServiceHandler {
         protected String doInBackground(Object... objs) {
         	String url = (String) objs[0];
         	Integer method = (Integer) objs[1];
-        	List<NameValuePair> params = (List<NameValuePair>) objs[2];
+        	@SuppressWarnings("unchecked")
+			List<NameValuePair> params = (List<NameValuePair>) objs[2];
 
         	return makeAsyncServiceCall(url, method, params);
         }

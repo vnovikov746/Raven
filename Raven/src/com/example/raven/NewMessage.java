@@ -57,6 +57,8 @@ public class NewMessage extends Activity
 						.getItemAtPosition(index);
 				String number = map.get("Phone");
 				mTxtPhoneNo.setText("" + number);
+				MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
+				smsTxt.requestFocus();
 				// Cursor c = (Cursor) av.getItemAtPosition(index);
 				// mTxtPhoneNo.setText("" + c.getString(2));
 			}

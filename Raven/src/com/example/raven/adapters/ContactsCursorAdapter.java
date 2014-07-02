@@ -14,6 +14,7 @@ public class ContactsCursorAdapter extends CursorAdapter
 {
 	private LayoutInflater inflater;
 	
+	@SuppressWarnings("deprecation")
 	public ContactsCursorAdapter(Context context, Cursor c)
 	{
 		super(context,c);

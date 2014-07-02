@@ -2,6 +2,7 @@ package com.example.raven.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,13 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.example.raven.R;
+import com.example.raven.db.Constants;
 
 public class ChatCursorAdapter extends CursorAdapter
 {
 	private LayoutInflater inflater;
 	
+	@SuppressWarnings("deprecation")
 	public ChatCursorAdapter(Context context, Cursor c)
 	{
 		super(context,c);
@@ -31,8 +34,15 @@ public class ChatCursorAdapter extends CursorAdapter
 		// c.getInt(6) = sent or not
 		
 		TextView txt = (TextView)view.findViewById(R.id.chatMessage);
-
-		txt.setText(c.getString(1));
+		if(c.getInt(4) == Constants.RECEIVED)
+		{
+			txt.setBackgroundColor(Color.rgb(0, 191, 255));
+		}
+		else
+		{
+			txt.setBackgroundColor(Color.rgb(255, 187, 255));
+		}
+		txt.setText(c.getString(1));			
 	}
 	
 	@Override

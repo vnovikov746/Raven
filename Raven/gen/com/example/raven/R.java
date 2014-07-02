@@ -25,9 +25,9 @@ public final class R {
     }
     public static final class id {
         public static final int NewMessageBtn=0x7f080005;
-        public static final int SendBtn=0x7f08000a;
+        public static final int SendBtn=0x7f080009;
         public static final int SendBtn2=0x7f080001;
-        public static final int SmsTxt=0x7f08000b;
+        public static final int SmsTxt=0x7f08000a;
         public static final int SmsTxt2=0x7f080002;
         public static final int action_settings=0x7f080015;
         public static final int ccontName=0x7f08000f;
@@ -35,17 +35,17 @@ public final class R {
         public static final int ccontType=0x7f080011;
         public static final int chatList=0x7f080003;
         public static final int chatMessage=0x7f08000c;
-        public static final int chooseContactBtn=0x7f080009;
+        public static final int chatMessage_in=0x7f08000b;
+        public static final int chooseContactBtn=0x7f080008;
         public static final int contactList=0x7f080004;
         public static final int contactName=0x7f08000d;
         public static final int contactPhone=0x7f08000e;
-        public static final int historyList=0x7f080007;
-        public static final int mmWhoNo=0x7f080008;
+        public static final int historyList=0x7f080006;
+        public static final int mmWhoNo=0x7f080007;
         public static final int phone=0x7f080012;
         public static final int scrollView1=0x7f080000;
         public static final int time=0x7f080013;
         public static final int txt=0x7f080014;
-        public static final int updateButton=0x7f080006;
     }
     public static final class layout {
         public static final int activity_chat=0x7f030000;
@@ -54,10 +54,11 @@ public final class R {
         public static final int activity_history=0x7f030003;
         public static final int activity_new_message=0x7f030004;
         public static final int activity_user_settings=0x7f030005;
-        public static final int chat_item_view=0x7f030006;
-        public static final int contact_item_view=0x7f030007;
-        public static final int custcont_view=0x7f030008;
-        public static final int history_item_view=0x7f030009;
+        public static final int chat_in_item_view=0x7f030006;
+        public static final int chat_item_view=0x7f030007;
+        public static final int contact_item_view=0x7f030008;
+        public static final int custcont_view=0x7f030009;
+        public static final int history_item_view=0x7f03000a;
     }
     public static final class menu {
         public static final int chat=0x7f070000;

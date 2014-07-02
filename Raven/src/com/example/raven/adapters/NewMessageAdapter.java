@@ -14,6 +14,7 @@ public class NewMessageAdapter extends CursorAdapter
 {
 	private LayoutInflater inflater;
 	
+	@SuppressWarnings("deprecation")
 	public NewMessageAdapter(Context context, Cursor c)
 	{
 		super(context,c);

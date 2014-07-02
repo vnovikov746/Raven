@@ -11,6 +11,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="@string/txt"
+        android:background="@android:color/background_light"
+        android:textColor="@android:color/background_dark"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -21,6 +23,8 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/contactName"
         android:text="@string/phone"
+        android:background="@android:color/background_light"
+        android:textColor="@android:color/background_dark"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

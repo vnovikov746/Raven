@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/background_dark"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -15,6 +16,8 @@
 	    android:layout_alignParentLeft="true"
 	    android:layout_alignParentTop="true"
 	    android:layout_marginTop="32dp"
+        android:cursorVisible="true"
+        android:textColor="#F5F5F5"
 	    android:layout_toLeftOf="@+id/chooseContactBtn" >
 	</AutoCompleteTextView>
 
@@ -25,6 +28,7 @@
         android:layout_alignBottom="@+id/mmWhoNo"
         android:layout_alignParentRight="true"
         android:onClick="onContactsClick"
+        android:background="#9F79EE"
         android:text="@string/contacts" />
 
     <Button
@@ -34,6 +38,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/chooseContactBtn"
         android:onClick="onSendClick"
+        android:background="#9F79EE"
         android:text="@string/sendBtn" />
 
     <ScrollView
@@ -52,8 +57,9 @@
         android:layout_alignLeft="@+id/mmWhoNo"
         android:layout_toLeftOf="@+id/SendBtn"
         android:ems="10"
+        android:cursorVisible="true"
+        android:textColor="#F5F5F5"
         android:text="@string/blank" >
-
         <requestFocus />
     </MultiAutoCompleteTextView>
 

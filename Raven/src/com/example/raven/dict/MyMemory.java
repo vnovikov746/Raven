@@ -12,7 +12,8 @@ import android.util.Log;
 
 import com.example.raven.services.ServiceHandler;
 
-public class MyMemory extends Translator {
+public class MyMemory extends Translator 
+{
 
 	// api settings
 	//http://mymemory.translated.net/doc/spec.php
@@ -38,19 +39,22 @@ public class MyMemory extends Translator {
 	 * 
 	 * http://api.mymemory.translated.net/get?q=%D7%A9%D7%9C%D7%95%D7%9D&langpair=he|en
 	 */
-	private String[] translate(String lang, String text, int method) {
+	private String[] translate(String lang, String text, int method) 
+	{
 
 		String[] translatedText = {""};
 		
 		//build the api call url
 		String url = "";
-		try {
+		try 
+		{
 			url = API_URL + "?"
 					+ "q=" + URLEncoder.encode(text, "UTF-8")	//Max 500 bytes
 					+ "&langpair=" + lang
 					+ "&de=raventranslator@gmail.com";
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
+		} 
+		catch (UnsupportedEncodingException e1) 
+		{
 			e1.printStackTrace();
 		}
 		
@@ -60,7 +64,8 @@ public class MyMemory extends Translator {
 		Log.d("Response: ", "> " + jsonStr);
 
         // Pares json response
-        if (jsonStr != null) {
+        if (jsonStr != null) 
+        {
         	try {
 				JSONObject jsonObj = new JSONObject(jsonStr);
 				int r_code = jsonObj.getInt(TAG_RESPONSE_STATUS);
@@ -73,47 +78,52 @@ public class MyMemory extends Translator {
 				for (int i=0; i<r_text.length(); i++)
 					translatedText[i] = r_text.getJSONObject(i).getString(TAG_TRANSLATION);
 			
-			} catch (JSONException e) {
+			} 
+        	catch (JSONException e) 
+        	{
 				e.printStackTrace();
 			}
-		} else {
+		} 
+        else 
+        {
 			Log.e("ServiceHandler", "Couldn't get any data from the url");
 			translatedText[0] = "Error";
 		}
-
-		return translatedText;
-		
+		return translatedText;		
 	}
 
 	
 	@Override
-	public String translate(String from, String to, String text) {
+	public String translate(String from, String to, String text) 
+	{
 		return translate(from + "|" + to, text, ServiceHandler.GET)[0];
 	}
 
 	@Override
-	public String[] translate(String from, String to, String[] text) {
-		// TODO Auto-generated method stub
+	public String[] translate(String from, String to, String[] text) 
+	{
+		// TODO: implement this method
 		return null;
 	}
 
 	@Override
-	public Map<String, String> getLangs() {
-		// TODO Auto-generated method stub
+	public Map<String, String> getLangs() 
+	{
+		// TODO: implement this method
 		return null;
 	}
 
 	@Override
-	public String detect(String text) {
-		// TODO Auto-generated method stub
+	public String detect(String text) 
+	{
+		// TODO: implement this method
 		return null;
 	}
 
 	@Override
-	public String detect(String[] text) {
-		// TODO Auto-generated method stub
+	public String detect(String[] text) 
+	{
+		// TODO: implement this method
 		return null;
 	}
-
-
 }

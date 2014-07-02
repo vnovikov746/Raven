@@ -154,6 +154,6 @@ public class ContactObserverService extends Service
 		dal.addAllConacts(mPeopleList);
 		dal.updateFlag(Constants.COLUMN_FLAG_UPDATE_CONTACTS,
 				Constants.UPDATE_CONTACTS);
-		Toast.makeText(this, "Contacts Added to DB", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "Contacts Added to DB", Toast.LENGTH_SHORT).show();
 	}
 }

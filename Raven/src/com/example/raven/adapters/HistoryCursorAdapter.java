@@ -2,6 +2,7 @@ package com.example.raven.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.example.raven.R;
+import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
 
 public class HistoryCursorAdapter extends CursorAdapter
@@ -16,6 +18,7 @@ public class HistoryCursorAdapter extends CursorAdapter
 	private LayoutInflater inflater;
 	private RavenDAL dal;
 	
+	@SuppressWarnings("deprecation")
 	public HistoryCursorAdapter(Context context, Cursor c)
 	{
 		super(context, c);
@@ -35,11 +38,24 @@ public class HistoryCursorAdapter extends CursorAdapter
 		
 		dal = new RavenDAL(context);
 		String name = dal.getContactName(c.getString(3));
-		
+
 		TextView phone = (TextView) view.findViewById(R.id.phone);
 		TextView time = (TextView) view.findViewById(R.id.time);
 		TextView txt = (TextView) view.findViewById(R.id.txt);
-		
+
+		if(c.getInt(4) == Constants.RECEIVED)
+		{
+			phone.setBackgroundColor(Color.rgb(0, 191, 255));
+			time.setBackgroundColor(Color.rgb(0, 191, 255));
+			txt.setBackgroundColor(Color.rgb(0, 191, 255));
+		}
+		else
+		{
+			phone.setBackgroundColor(Color.rgb(255, 187, 255));
+			time.setBackgroundColor(Color.rgb(255, 187, 255));
+			txt.setBackgroundColor(Color.rgb(255, 187, 255));
+		}
+						
 		if(name.equals(""))
 		{
 			phone.setText(c.getString(3));
