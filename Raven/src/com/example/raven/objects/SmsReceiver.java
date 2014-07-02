@@ -1,18 +1,28 @@
 package com.example.raven.objects;
 
+import java.util.List;
+
 import com.example.raven.R;
 
+import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
+//import android.widget.Toast;
+
+
+
+
 
 import com.example.raven.Chat;
 import com.example.raven.HistoryActivity;
@@ -59,7 +69,7 @@ public class SmsReceiver extends BroadcastReceiver
 		// Get SMS map from Intent
 		Bundle extras = intent.getExtras();
 		
-		String messages = "";
+//		String messages = "";
 		
 		if(extras != null)
 		{
@@ -74,7 +84,7 @@ public class SmsReceiver extends BroadcastReceiver
 			{
 				SmsMessage sms = SmsMessage.createFromPdu((byte[]) smsExtra[i]);
 				
-				String body = sms.getMessageBody().toString();
+//				String body = sms.getMessageBody().toString();
 				String phone = sms.getOriginatingAddress();
 				
 				TelephonyManager tm = (TelephonyManager) context
@@ -87,8 +97,8 @@ public class SmsReceiver extends BroadcastReceiver
 					phone = "0" + phone.substring(countryCode.length());
 				}
 				
-				messages += "SMS from " + phone + " :\n";
-				messages += body + "\n";
+//				messages += "SMS from " + phone + " :\n";
+//				messages += body + "\n";
 				
 				// Here you can add any your code to work with incoming SMS
 				// I added encrypting of all received SMS
@@ -97,8 +107,8 @@ public class SmsReceiver extends BroadcastReceiver
 			}
 			
 			// Display SMS message
-			Toast.makeText(context, "RAVEN: " + messages, Toast.LENGTH_SHORT)
-					.show();
+//			Toast.makeText(context, "RAVEN: " + messages, Toast.LENGTH_SHORT)
+//					.show();
 		}
 		// WARNING!!!
 		// If you uncomment next line then received SMS will not be put to
@@ -107,6 +117,7 @@ public class SmsReceiver extends BroadcastReceiver
 		// this.abortBroadcast();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void putSmsToDatabase(Context context,
 			ContentResolver contentResolver, SmsMessage sms)
 	{
@@ -135,12 +146,28 @@ public class SmsReceiver extends BroadcastReceiver
 		Cursor c2 = dal.getChatWithContactCursor(phone);
 		HistoryActivity.mca.changeCursor(c1);
 		Chat.mca.changeCursor(c2);
-		
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setSmallIcon(R.drawable.ic_launcher).setContentTitle("Received SMS").setContentText(body);
-		Intent resultIntent = new Intent(context, Chat.class);
-		PendingIntent resultPedingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		mBuilder.setContentIntent(resultPedingIntent);
-		
+		Chat.list.setSelection(Chat.list.getAdapter().getCount()-1);
+				
+		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+	    // Get info from the currently active task
+	    List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+	    String activityName = taskInfo.get(0).topActivity.getClassName();
+	    if(!activityName.equals(HistoryActivity.class.getName()) && !activityName.equals(Chat.class.getName()))
+	    {
+			NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+			Notification mNotification = new Notification(R.drawable.ic_launcher,"Received SMS",System.currentTimeMillis());		
+			int NOTIFICATION_ID = 1;
+			mNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+			mNotification.defaults |= Notification.DEFAULT_VIBRATE;
+//			mNotification.defaults |= Notification.DEFAULT_SOUND;
+			mNotification.sound = Uri.parse("android.resource://" + context.getPackageName() + R.raw.crowing);
+			Intent mIntent = new Intent(context, Chat.class);
+			mIntent.putExtra("phoneNum", phone);
+			PendingIntent mPedingIntent = PendingIntent.getActivity(context, 0, mIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			mNotification.setLatestEventInfo(context, "Received SMS", body, mPedingIntent);
+			notificationManager.notify(NOTIFICATION_ID , mNotification);	
+	    }
+	    
 		// Create SMS row
 		// ContentValues values = new ContentValues();
 		// values.put(ADDRESS, sms.getOriginatingAddress());

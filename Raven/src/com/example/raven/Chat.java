@@ -28,7 +28,7 @@ public class Chat extends Activity
 {
 	private RavenDAL dal = HistoryActivity.dal;
 	private String phoneNo;
-	private ListView list;
+	public static ListView list;
 	public static ChatCursorAdapter mca;
 	
 	@Override
@@ -48,6 +48,12 @@ public class Chat extends Activity
 	@Override
 	public void onResume()
 	{
+//		Intent intent = getIntent();
+//		phoneNo = intent.getStringExtra("phoneNum");
+//		if(phoneNo != null)
+//		{
+//			populateMessages(phoneNo);
+//		}
 		super.onResume();
 	}
 	

@@ -46,5 +46,5 @@ public class Constants implements BaseColumns
 	public static final int UPDATE_CONTACTS = 1;
 	public static final int DONT_UPDATE_CONTACTS = 0;
 	public static final int CREATE_SERVICE_INSTANCE = 1;
-	public static final int DONT_CREATE_SERVICE_INSTANCE = 0;
+	public static final int DONT_CREATE_SERVICE_INSTANCE = 0;	
 }
