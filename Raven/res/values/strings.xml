@@ -17,5 +17,7 @@
     <string name="phone">phone</string>
     <string name="time">time</string>
     <string name="txt">txt</string>
+    <string name="ChooseLanguage">Choose your language</string>
+    <string name="confirm">Confirm</string>
 
 </resources>

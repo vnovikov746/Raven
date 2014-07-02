@@ -22,9 +22,9 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 	
 	// menu
 	private final int groupId = 1;
-	private final int NewMessageId = Menu.FIRST;
-	private final int GlobalSettingsId = Menu.FIRST + 1;
-	private final int AboutId = Menu.FIRST + 2;
+	// private final int NewMessageId = Menu.FIRST;
+	private final int GlobalSettingsId = Menu.FIRST;
+	private final int AboutId = Menu.FIRST + 1;
 	
 	private ListView list;
 	
@@ -85,9 +85,10 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		
-		Intent NewMessageIntent = new Intent(this, NewMessage.class);
-		menu.add(groupId, NewMessageId, NewMessageId, "New message").setIntent(
-				NewMessageIntent);
+		// Intent NewMessageIntent = new Intent(this, NewMessage.class);
+		// menu.add(groupId, NewMessageId, NewMessageId,
+		// "New message").setIntent(
+		// NewMessageIntent);
 		
 		Intent GlobalSettingsIntent = new Intent(this, GlobalSettings.class);
 		menu.add(groupId, GlobalSettingsId, GlobalSettingsId, "Preferences")
@@ -120,31 +121,31 @@ public class HistoryActivity extends Activity implements OnItemClickListener
 		startActivity(intent);
 	}
 	
-//	public void onUpdateClick(View v)
-//	{
-//		ContentResolver contentResolver = getContentResolver();
-//		Cursor cursor = contentResolver.query(Uri.parse("content://sms/inbox"),
-//				null, null, null, null);
-//		
-//		int indexBody = cursor.getColumnIndex(SmsReceiver.BODY);
-//		int indexAddr = cursor.getColumnIndex(SmsReceiver.ADDRESS);
-//		
-//		if(indexBody < 0 || !cursor.moveToFirst())
-//		{
-//			return;
-//		}
-//		
-//		do
-//		{
-//			// String str = "Sender: " + cursor.getString( indexAddr ) + "\n" +
-//			// cursor.getString( indexBody );
-//			// smsList.add( str );
-//			dal.addMessage(cursor.getString(indexBody), null,
-//					cursor.getString(indexAddr), Constants.SENT_BY_ME,
-//					Constants.READ, Constants.NOT_SENT);
-//		}
-//		while(cursor.moveToNext());
-//		
-//		showHistory();
-//	}
+	// public void onUpdateClick(View v)
+	// {
+	// ContentResolver contentResolver = getContentResolver();
+	// Cursor cursor = contentResolver.query(Uri.parse("content://sms/inbox"),
+	// null, null, null, null);
+	//
+	// int indexBody = cursor.getColumnIndex(SmsReceiver.BODY);
+	// int indexAddr = cursor.getColumnIndex(SmsReceiver.ADDRESS);
+	//
+	// if(indexBody < 0 || !cursor.moveToFirst())
+	// {
+	// return;
+	// }
+	//
+	// do
+	// {
+	// // String str = "Sender: " + cursor.getString( indexAddr ) + "\n" +
+	// // cursor.getString( indexBody );
+	// // smsList.add( str );
+	// dal.addMessage(cursor.getString(indexBody), null,
+	// cursor.getString(indexAddr), Constants.SENT_BY_ME,
+	// Constants.READ, Constants.NOT_SENT);
+	// }
+	// while(cursor.moveToNext());
+	//
+	// showHistory();
+	// }
 }
