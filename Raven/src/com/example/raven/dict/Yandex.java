@@ -103,7 +103,7 @@ public class Yandex extends Translator {
 	
 	
 	/**
-	 * Translate
+	 * getLangs
 	 * @ui - 	en - in English
 	 * 			ru - in Russian
 	 * 			tr - in Turkish

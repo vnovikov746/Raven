@@ -26,7 +26,9 @@ import android.widget.Toast;
 
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.dict.Translator;
 import com.example.raven.objects.CountryCodeMap;
+import com.example.raven.objects.Raven;
 
 public class NewMessage extends Activity
 {
@@ -130,8 +132,23 @@ public class NewMessage extends Activity
 		MultiAutoCompleteTextView smsTxt = (MultiAutoCompleteTextView) findViewById(R.id.SmsTxt);
 		String message = smsTxt.getText().toString().trim();
 		
+
+		
+		
 		if(phoneNo.length() > 0 && message.length() > 0)
 		{
+			
+			//translation
+			Translator t = Raven.SetService(Raven.YANDEX);
+			String translated = t.translate("he", "en", message);
+			String original = message;
+			
+			if (translated == "")
+				message = original;
+			else
+				message = translated;
+			
+			//sms send
 			TelephonyManager telMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			int simState = telMgr.getSimState();
 			switch(simState)
