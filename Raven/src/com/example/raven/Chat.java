@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Toast;
@@ -22,17 +23,17 @@ public class Chat extends Activity
 	private final int ChatSettingsId = Menu.FIRST;
 	
 	private RavenDAL dal = HistoryActivity.dal;
+	private AppPreferences _appPrefs = dal.AppPreferences();
 	private String phoneNo;
 	public static ListView list;
 	public static ChatCursorAdapter mca;
 	private SmsSender sender;
-	private AppPreferences _appPrefs;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		_appPrefs = new AppPreferences(getApplicationContext());
 		setContentView(R.layout.activity_chat);
 		sender = new SmsSender(this);
 		
@@ -106,6 +107,8 @@ public class Chat extends Activity
 			mca.changeCursor(c);
 			
 			smsTxt.setText("");
+			InputMethodManager imm = (InputMethodManager)getSystemService(Chat.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(smsTxt.getWindowToken(), 0);
 		}
 		else
 		{

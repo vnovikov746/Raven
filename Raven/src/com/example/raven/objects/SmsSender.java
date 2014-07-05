@@ -17,31 +17,54 @@ import com.example.raven.HistoryActivity;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
 import com.example.raven.dict.Translator;
+import com.example.raven.services.ServiceHandler;
 
 
 public class SmsSender {
 	private Context mContext;
 	private RavenDAL dal = HistoryActivity.dal;
-	private AppPreferences _appPrefs;
+	private AppPreferences _appPrefs = dal.AppPreferences();
 	
 	public SmsSender(Context context) {
 		mContext = context;
-		_appPrefs = new AppPreferences(context);
 	}
 	
 	public void send(String phoneNo, String original) {
-		if (_appPrefs.getBoolean(_appPrefs.TRANSLATE_OUT))
+		if (_appPrefs.getBoolean(AppPreferences.TRANSLATE_OUT))
 			send(phoneNo, original, true);
 		else
-			send(phoneNo, original, true);
+			send(phoneNo, original, false);
 	}
 	
 	public void send(String phoneNo, String original, boolean translate) {
-		String translated = "";
+		String translated = original;
 		
+		//check SIM is in
 		if (!checkSimState()) return;
-		if (translate) translated = translate(original);
+		
+		//check Internet connection
+		if (isInternetConnected()) {
+			
+			//check if user want to translate
+			if (translate) { 
+				translated = translate(original);
+				if (translated.equals(original)) {
+					Toast.makeText(mContext, "Unable to translate text", Toast.LENGTH_LONG).show();
+					Toast.makeText(mContext, "Original text was sent.", Toast.LENGTH_LONG).show();
+				}
+			}
+		}
+		
 		sendSMS(phoneNo, original, translated); // method to send message
+	}
+	
+	private boolean isInternetConnected() {
+		if (ServiceHandler.getConnectivityStatus(mContext) == ServiceHandler.TYPE_NOT_CONNECTED)
+		{
+			Toast.makeText(mContext, "Not connected to Internet", Toast.LENGTH_LONG).show();
+			return false;
+		}
+		return true;
 	}
 	
 	private String translate(String message) {

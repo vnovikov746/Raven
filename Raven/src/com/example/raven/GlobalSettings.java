@@ -16,6 +16,7 @@ public class GlobalSettings extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		_appPrefs = new AppPreferences(GlobalSettings.this);
 		setContentView(R.layout.activity_global_settings);
 		
 		//init first settings

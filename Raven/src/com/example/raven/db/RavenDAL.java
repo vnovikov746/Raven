@@ -7,15 +7,26 @@ import java.util.Map;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.example.raven.objects.AppPreferences;
 import com.example.raven.objects.Message;
 
 public class RavenDAL
 {
 	private RavenDB db;
+	private AppPreferences _appPrefs;
 	
 	public RavenDAL(Context context)
 	{
 		db = new RavenDB(context);
+		_appPrefs = new AppPreferences(context);
+	}
+
+	/*
+	 * Add Contact to contacts table
+	 */
+	public AppPreferences AppPreferences()
+	{
+		return _appPrefs;
 	}
 	
 	/*

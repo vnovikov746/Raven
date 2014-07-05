@@ -24,10 +24,16 @@ import android.telephony.TelephonyManager;
 
 
 
+
+
+
+import android.util.Log;
+
 import com.example.raven.Chat;
 import com.example.raven.HistoryActivity;
 import com.example.raven.db.Constants;
 import com.example.raven.db.RavenDAL;
+import com.example.raven.dict.Translator;
 
 public class SmsReceiver extends BroadcastReceiver
 {
@@ -140,7 +146,12 @@ public class SmsReceiver extends BroadcastReceiver
 		// }
 		
 		RavenDAL dal = new RavenDAL(context);
-		dal.addMessage(body, null, phone, Constants.RECEIVED,
+		AppPreferences _appPrefs = dal.AppPreferences();
+		String translated = body;
+		if (_appPrefs.getBoolean(AppPreferences.TRANSLATE_IN))
+			translated = translate(body);
+
+		dal.addMessage(body, translated, phone, Constants.RECEIVED,
 				Constants.NOT_READ, Constants.NOT_SENT);
 		Cursor c1 = dal.getAllLastMessagesCursor();
 		Cursor c2 = dal.getChatWithContactCursor(phone);
@@ -191,5 +202,20 @@ public class SmsReceiver extends BroadcastReceiver
 		//
 		// Push row into the SMS table
 		// contentResolver.insert(Uri.parse(SMS_URI), values);
+	}
+	
+	private String translate(String message) {
+		Translator t = Raven.SetService(Raven.YANDEX);
+		String translated = t.translate("he", "en", message);
+		String original = message;
+		
+		if (translated == "")
+			message = original;
+		else
+			message = translated;
+		
+		Log.d("Tranlation:", message);
+		
+		return message;
 	}
 }
