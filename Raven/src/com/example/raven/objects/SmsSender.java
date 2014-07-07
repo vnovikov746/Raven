@@ -69,13 +69,22 @@ public class SmsSender {
 	
 	private String translate(String message) {
 		Translator t = Raven.SetService(Raven.YANDEX);
-		String translated = t.translate("he", "en", message);
-		String original = message;
 		
-		if (translated == "")
-			message = original;
-		else
-			message = translated;
+		if (_appPrefs.getBoolean(AppPreferences.TRANSLATE_OUT)) {
+			String from = _appPrefs.getString(AppPreferences.TRNASLATE_TO);
+			if (from == "")
+				from = "he";
+			String to = "en";
+		
+			String translated = t.translate(from, to, message);
+			String original = message;
+			
+			if (translated == "")
+				message = original;
+			else
+				message = translated;
+		}
+		
 		
 		Log.d("Tranlation:", message);
 		

@@ -27,6 +27,8 @@ public class Yandex extends Translator {
     private static final String TAG_TEXT = "text";
     private static final String TAG_DIRS = "dirs";
     private static final String TAG_LANGS = "langs";
+    private static final String TAG_DETECTED = "detected";
+    
 
 
 	/**
@@ -45,10 +47,11 @@ public class Yandex extends Translator {
 	 * ERR_UNPROCESSABLE_TEXT	422	The text could not be translated.
 	 * ERR_LANG_NOT_SUPPORTED	501	The specified translation direction is not supported.
 	 * */
-	private String[] translate(String lang, String[] text, String format, String options, int method) {
+	private String[] translate(String from, String to, String[] text, String format, String options, int method) {
 		String[] translatedText = new String[text.length];
 		
 		//build the api call url
+		String lang = from+"-"+to;
 		String url = API_URL + "translate"
 				+ "?key=" + API_KEY
 				+ "&lang=" + lang
@@ -56,6 +59,7 @@ public class Yandex extends Translator {
 				+ "&options=" + options;
 		for (String phrase : text)
 			url += "&text=" + phrase;
+		Log.d("url: ", "> " + url);
 		
 		// Making a request to url and getting response
 		ServiceHandler sh = new ServiceHandler();
@@ -68,6 +72,15 @@ public class Yandex extends Translator {
 				JSONObject jsonObj = new JSONObject(jsonStr);
 				int r_code = jsonObj.getInt(TAG_CODE);
 				if (r_code != 200) return null;
+				
+				//if autodetect
+				if (options=="1") {
+					
+					//try to translate the other language
+					String r_detected = jsonObj.getJSONObject(TAG_DETECTED).getString(TAG_LANG);
+					if (!r_detected.equals(from))
+						return translate(r_detected, to, text, format, "0", method);
+				}
 				
 				String r_lang = jsonObj.getString(TAG_LANG);
 				JSONArray r_text = jsonObj.getJSONArray(TAG_TEXT);
@@ -90,12 +103,12 @@ public class Yandex extends Translator {
 	@Override
 	public String translate(String from, String to, String text) {
 		String[] one_text = {text};
-		return translate(from+"-"+to, one_text, "plain", "1", ServiceHandler.POST)[0];
+		return translate(from, to, one_text, "plain", "1", ServiceHandler.POST)[0];
 	}
 
 	@Override
 	public String[] translate(String from, String to, String[] text) {
-		return translate(from+"-"+to, text, "plain", "1", ServiceHandler.POST);
+		return translate(from, to, text, "plain", "1", ServiceHandler.POST);
 	}
 	
 	

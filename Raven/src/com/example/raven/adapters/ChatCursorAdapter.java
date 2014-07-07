@@ -42,17 +42,24 @@ public class ChatCursorAdapter extends CursorAdapter
 		{
 			txt.setGravity(Gravity.LEFT);
 			txt.setBackgroundColor(Color.rgb(0, 191, 255));
+			
+			if (_appPrefs.getBoolean(_appPrefs.SHOW_TRANSLATED))
+				txt.setText("2. " +c.getString(2));
+			else
+				txt.setText("1. " +c.getString(1));
 		}
 		else
 		{
 			txt.setGravity(Gravity.RIGHT);
 			txt.setBackgroundColor(Color.rgb(255, 187, 255));
+			
+			if (_appPrefs.getBoolean(_appPrefs.SHOW_TRANSLATED))
+				txt.setText("1. " +c.getString(1));
+			else
+				txt.setText("2. " +c.getString(2));
 		}
 		
-		if (_appPrefs.getBoolean(_appPrefs.SHOW_TRANSLATED))
-			txt.setText("2. "+c.getString(2));
-		else
-			txt.setText("1. "+c.getString(1));
+
 	}
 	
 	@Override

@@ -149,8 +149,8 @@ public class SmsReceiver extends BroadcastReceiver
 		AppPreferences _appPrefs = dal.AppPreferences();
 		String translated = body;
 		if (_appPrefs.getBoolean(AppPreferences.TRANSLATE_IN)) {
-			String to = "";
-			if (_appPrefs.getString(AppPreferences.TRNASLATE_TO) == "")
+			String to = _appPrefs.getString(AppPreferences.TRNASLATE_TO);
+			if (to == "")
 				to = "he";
 			String from = "en";
 			translated = translate(from, to, body);
