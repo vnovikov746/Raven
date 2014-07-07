@@ -12,16 +12,19 @@ import android.widget.TextView;
 
 import com.example.raven.R;
 import com.example.raven.db.Constants;
+import com.example.raven.objects.AppPreferences;
 
 public class ChatCursorAdapter extends CursorAdapter
 {
 	private LayoutInflater inflater;
+	private AppPreferences _appPrefs;
 	
 	@SuppressWarnings("deprecation")
 	public ChatCursorAdapter(Context context, Cursor c)
 	{
 		super(context, c);
 		inflater = LayoutInflater.from(context);
+		_appPrefs = new AppPreferences(context);
 	}
 	
 	@Override
@@ -45,7 +48,11 @@ public class ChatCursorAdapter extends CursorAdapter
 			txt.setGravity(Gravity.RIGHT);
 			txt.setBackgroundColor(Color.rgb(255, 187, 255));
 		}
-		txt.setText(c.getString(1));
+		
+		if (_appPrefs.getBoolean(_appPrefs.SHOW_TRANSLATED))
+			txt.setText("2. "+c.getString(2));
+		else
+			txt.setText("1. "+c.getString(1));
 	}
 	
 	@Override

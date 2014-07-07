@@ -11,8 +11,7 @@ import android.widget.CompoundButton;
 public class ChatSettings extends Activity
 {
 	private AppPreferences _appPrefs;
-	private CheckBox translateIn;
-	private CheckBox translateOut;
+	private CheckBox showTranslated, translateIn, translateOut;
 	
 	
 	@Override
@@ -23,16 +22,25 @@ public class ChatSettings extends Activity
 		setContentView(R.layout.activity_chat_settings);
 		
 		//locators
+		showTranslated = (CheckBox) findViewById(R.id.showTranslated);
 		translateIn = (CheckBox) findViewById(R.id.translateIn);
 		translateOut = (CheckBox) findViewById(R.id.translateOut);
 		
 		//init value
+		if (_appPrefs.getBoolean(_appPrefs.SHOW_TRANSLATED))
+			showTranslated.setChecked(true);
 		if (_appPrefs.getBoolean(_appPrefs.TRANSLATE_IN))
 			translateIn.setChecked(true);
 		if (_appPrefs.getBoolean(_appPrefs.TRANSLATE_OUT))
 			translateOut.setChecked(true);
 		
 		//set listeners
+		showTranslated.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				_appPrefs.setBoolean(_appPrefs.SHOW_TRANSLATED, isChecked);
+			}
+		});
 		translateIn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

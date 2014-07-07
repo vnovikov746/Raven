@@ -70,6 +70,7 @@ public class Chat extends Activity
 //			populateMessages(phoneNo);
 //		}
 		super.onResume();
+		mca.notifyDataSetChanged();
 	}
 	
 	@Override

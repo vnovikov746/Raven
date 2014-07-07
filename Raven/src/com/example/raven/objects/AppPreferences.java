@@ -11,6 +11,8 @@ public class AppPreferences {
     public static final String FIRST_LAUNCH = "first_launch";
     public static final String TRANSLATE_IN = "translate_in";
     public static final String TRANSLATE_OUT = "translate_out";
+    public static final String SHOW_TRANSLATED = "show_translate";
+    public static final String TRNASLATE_TO = "translate_to";
 
     private static final String APP_SHARED_PREFS = AppPreferences.class.getSimpleName(); //  Name of the file -.xml //"com.example.app"
     private SharedPreferences _sharedPrefs;

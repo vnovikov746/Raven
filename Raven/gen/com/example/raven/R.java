@@ -41,9 +41,8 @@ public final class R {
         public static final int chatMessage=0x7f0a0013;
         public static final int chatMessage_in=0x7f0a0012;
         public static final int chooseContactBtn=0x7f0a000e;
-        public static final int chooseLanguage=0x7f0a0008;
-        public static final int chooseLanuageBtn=0x7f0a000a;
-        public static final int contactList=0x7f0a0007;
+        public static final int chooseLanguage=0x7f0a0009;
+        public static final int contactList=0x7f0a0008;
         public static final int contactName=0x7f0a0014;
         public static final int contactPhone=0x7f0a0015;
         public static final int historyList=0x7f0a000c;
@@ -51,10 +50,11 @@ public final class R {
         public static final int phone=0x7f0a0019;
         public static final int scrollView1=0x7f0a0010;
         public static final int scrollView2=0x7f0a0003;
-        public static final int spinner1=0x7f0a0009;
+        public static final int showTranslated=0x7f0a0005;
         public static final int time=0x7f0a001a;
-        public static final int translateIn=0x7f0a0005;
-        public static final int translateOut=0x7f0a0006;
+        public static final int translateIn=0x7f0a0006;
+        public static final int translateOut=0x7f0a0007;
+        public static final int translateTo=0x7f0a000a;
         public static final int txt=0x7f0a001b;
     }
     public static final class layout {
@@ -83,10 +83,10 @@ public final class R {
     }
     public static final class string {
         public static final int ChooseLanguage=0x7f070010;
-        public static final int Large_Text=0x7f070014;
-        public static final int Medium_Text=0x7f070015;
+        public static final int Large_Text=0x7f070015;
+        public static final int Medium_Text=0x7f070016;
         public static final int NewMessage=0x7f070006;
-        public static final int Small_Text=0x7f070016;
+        public static final int Small_Text=0x7f070017;
         public static final int action_settings=0x7f070001;
         public static final int app_name=0x7f070000;
         public static final int blank=0x7f070005;
@@ -95,6 +95,7 @@ public final class R {
         public static final int hello_world=0x7f070002;
         public static final int phone=0x7f07000d;
         public static final int sendBtn=0x7f070004;
+        public static final int showTranslated=0x7f070014;
         public static final int time=0x7f07000e;
         public static final int title_activity_chat=0x7f07000a;
         public static final int title_activity_contacts=0x7f070008;

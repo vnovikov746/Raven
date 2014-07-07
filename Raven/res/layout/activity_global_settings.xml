@@ -21,23 +21,11 @@
         android:textColor="@android:color/white" />
 
     <Spinner
-        android:id="@+id/spinner1"
+        android:id="@+id/translateTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/chooseLanguage"
-        android:layout_marginTop="38dp"
-        android:background="@android:color/background_light"
-        android:layout_toLeftOf="@+id/chooseLanuageBtn" />
-
-    <Button
-        android:id="@+id/chooseLanuageBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/spinner1"
-        android:layout_alignParentRight="true"
-        android:background="#9F79EE"
-        android:onClick="onConfirmClick"
-        android:layout_alignTop="@+id/spinner1"
-        android:text="@string/confirm" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp" />
 
 </RelativeLayout>

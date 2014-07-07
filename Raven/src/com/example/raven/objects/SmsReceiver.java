@@ -148,9 +148,14 @@ public class SmsReceiver extends BroadcastReceiver
 		RavenDAL dal = new RavenDAL(context);
 		AppPreferences _appPrefs = dal.AppPreferences();
 		String translated = body;
-		if (_appPrefs.getBoolean(AppPreferences.TRANSLATE_IN))
-			translated = translate(body);
-
+		if (_appPrefs.getBoolean(AppPreferences.TRANSLATE_IN)) {
+			String to = "";
+			if (_appPrefs.getString(AppPreferences.TRNASLATE_TO) == "")
+				to = "he";
+			String from = "en";
+			translated = translate(from, to, body);
+		}
+			
 		dal.addMessage(body, translated, phone, Constants.RECEIVED,
 				Constants.NOT_READ, Constants.NOT_SENT);
 		Cursor c1 = dal.getAllLastMessagesCursor();
@@ -204,9 +209,9 @@ public class SmsReceiver extends BroadcastReceiver
 		// contentResolver.insert(Uri.parse(SMS_URI), values);
 	}
 	
-	private String translate(String message) {
+	private String translate(String from, String to, String message) {
 		Translator t = Raven.SetService(Raven.YANDEX);
-		String translated = t.translate("he", "en", message);
+		String translated = t.translate(from, to, message);
 		String original = message;
 		
 		if (translated == "")

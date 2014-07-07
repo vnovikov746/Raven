@@ -21,5 +21,6 @@
     <string name="confirm">Confirm</string>
     <string name="translateIn">Translate Incoming messages?</string>
     <string name="translateOut">Translate outgoing meeages?</string>
+    <string name="showTranslated">Show translated messages?</string>
 
 </resources>

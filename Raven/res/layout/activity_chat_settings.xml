@@ -10,11 +10,22 @@
     tools:context=".ChatSettings" >
 
     <CheckBox
-        android:id="@+id/translateIn"
+        android:id="@+id/showTranslated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:text="@string/showTranslated"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/options_txt" />
+
+    <CheckBox
+        android:id="@+id/translateIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/showTranslated"
+        android:layout_below="@+id/showTranslated"
+        android:layout_marginTop="20dp"
         android:text="@string/translateIn"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/options_txt" />
@@ -23,9 +34,9 @@
         android:id="@+id/translateOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="70dp"
+        android:layout_alignLeft="@+id/translateIn"
+        android:layout_below="@+id/translateIn"
+        android:layout_marginTop="20dp"
         android:text="@string/translateOut"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/options_txt" />
